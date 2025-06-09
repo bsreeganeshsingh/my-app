@@ -1,4 +1,5 @@
 import React from "react";
+import './Components.css';
 
 class Counter extends React.Component {
   constructor(props) {
@@ -23,10 +24,10 @@ class Counter extends React.Component {
   }
 
   render() {
-    return React.createElement('div', { style: { textAlign: 'center', marginTop: '50px' } },
-      React.createElement('h2', null, `Count: ${this.state.count}`),
-      React.createElement('button', { onClick: this.decrement, style: { marginRight: '10px' } }, '-'),
-      React.createElement('button', { onClick: this.increment }, '+')
+    return React.createElement('div', { className: 'container' },
+      React.createElement('h2', { className: 'value' }, `Count: ${this.state.count}`),
+      React.createElement('button', { onClick: this.decrement, className: 'button' }, '-'),
+      React.createElement('button', { onClick: this.increment, className: 'button' }, '+')
     );
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import Counter from './Counter';
-import SearchForm from './SearchForm';
-import GenreSelect from './GenreSelect';
+import Counter from './components/Counter';
+import SearchForm from './components/SearchForm';
+import GenreSelect from './components/GenreSelect';
 import './App.css';
 
 function App() {
@@ -17,17 +17,26 @@ function App() {
     setSelectedGenre(genre);
   };
 
-  return React.createElement('div', { className: 'App' },
-    React.createElement('header', { className: 'App-header' },
-      React.createElement('h1', null, 'Welcome to the Core Concepts Demo App'),
-      React.createElement(Counter, { initialValue: 5 }),
-      React.createElement(SearchForm, { initialQuery: 'Tare Jameen Par', onSearch: handleSearch }),
-      React.createElement(GenreSelect, {
-        genres: genres,
-        selectedGenre: selectedGenre,
-        onSelect: handleGenreSelect
-      })
-    )
+  return (
+    <div className="App">
+      <h1>React Components Example</h1>
+      <hr/>
+      <h2>Counter Component</h2>
+      <Counter initialValue={10} />
+      <hr/>
+      <h2>Search Form Component</h2>
+      <SearchForm initialQuery="Tare Jameen Par" onSearch={handleSearch} /> 
+      <hr/>
+      <h2>Genre Select Component</h2>
+      <GenreSelect
+        genres={genres}
+        selectedGenre={selectedGenre}
+        onSelect={handleGenreSelect}
+      />
+      <div className="container">
+        <p>Selected Genre: {selectedGenre}</p>
+      </div>
+    </div>
   );
 }
 
