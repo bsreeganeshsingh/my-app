@@ -20,3 +20,9 @@
   color: #fff;
   border-color: #007BFF;
 }
+
+.search-input {
+  padding: 8px;
+  width: 200px;
+  margin-right: 10px;
+}
