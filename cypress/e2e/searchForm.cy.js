@@ -20,14 +20,14 @@ describe('SearchForm Component', () => {
 
     // Validation if popup renders text
     cy.on('window:alert', (text) => {
-      expect(text).to.contains('You searched for: Iron Man');
+      expect(text).to.contains('Search triggered for: Iron Man');
     });
   });
 
   it('should trigger popup and callback on Enter key', () => {
     cy.get('input.search-input').clear().type('Thor{enter}');
     cy.on('window:alert', (text) => {
-      expect(text).to.contains('You searched for: Thor');
+      expect(text).to.contains('Search triggered for: Thor');
     });
   });
 });

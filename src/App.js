@@ -22,6 +22,7 @@ function App() {
       <GenreSelect
         genres={genres}
         selectedGenre={selectedGenre}
+        onSelect={setSelectedGenre}
       />
       <div className="container">
         <p>Selected Genre: {selectedGenre}</p>

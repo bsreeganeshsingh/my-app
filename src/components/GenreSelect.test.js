@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GenreSelect from './GenreSelect';
 
@@ -30,7 +30,9 @@ test('click on genre button calls onSelect with genre', async () => {
     window.alert = jest.fn(); // Mock window.alert
     render(<GenreSelect genres={['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']} selectedGenre="" onSelect={mockOnSelect} />);
     const button = screen.getByRole('button', { name: 'Sci-Fi' });
-    await userEvent.click(button);
+
+    fireEvent.click(button);
+
     expect(mockOnSelect).toHaveBeenCalledWith('Sci-Fi');
     expect(window.alert).toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalledWith('Genre selected: Sci-Fi');

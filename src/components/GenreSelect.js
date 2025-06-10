@@ -3,7 +3,9 @@ import './Components.css';
 function GenreSelect({ genres, selectedGenre, onSelect }) {
 
   const handleSelect = (genre) => {
-    onSelect(genre);
+    if (typeof onSelect === 'function') {
+      onSelect(genre);
+    }
     window.alert(`Genre selected: ${genre}`);
   };
 

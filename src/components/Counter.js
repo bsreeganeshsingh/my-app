@@ -19,7 +19,7 @@ class Counter extends React.Component {
 
   decrement() {
     this.setState((prevState) => ({
-      count: prevState.count - 1
+      count: Math.max(prevState.count - 1, 0) // Prevent decrementing below zero
     }));
   }
 
