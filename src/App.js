@@ -17,7 +17,6 @@ function App() {
       <hr/>
       <h2>Search Form Component</h2>
       <SearchForm initialQuery="Tare Zameen Par" /> 
-      <SearchForm initialQuery="Tare Zameen Par" /> 
       <hr/>
       <h2>Genre Select Component</h2>
       <GenreSelect
