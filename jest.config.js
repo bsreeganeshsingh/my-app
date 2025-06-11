@@ -7,5 +7,8 @@ module.exports = {
     "!src/setupTests.js"
   ],
   coverageDirectory: "coverage",
-  testEnvironment: "jsdom"
+  testEnvironment: "jsdom",
+  moduleNameMapper: {
+    "\\.css$": "<rootDir>/styleMock.js",
+  },
 };

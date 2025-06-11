@@ -50,6 +50,9 @@
       "!src/**/*.test.{js,jsx,ts,tsx}",
       "!src/reportWebVitals.js",
       "!src/setupTests.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.css$": "<rootDir>/styleMock.js"
+    }
   }
 }

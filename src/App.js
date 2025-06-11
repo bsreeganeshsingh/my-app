@@ -2,6 +2,7 @@ import React from 'react';
 import Counter from './components/Counter';
 import SearchForm from './components/SearchForm';
 import GenreSelect from './components/GenreSelect';
+import './App.css';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = React.useState('Action');
@@ -9,23 +10,22 @@ function App() {
 
   return (
     <div className="App">
-      <h1>React Components Example</h1>
-      <hr/>
-      <h2>Counter Component</h2>
-      <Counter initialValue={10} />
-      <hr/>
-      <h2>Search Form Component</h2>
-      <SearchForm initialQuery="Tare Zameen Par" /> 
-      <hr/>
-      <h2>Genre Select Component</h2>
-      <GenreSelect
-        genres={genres}
-        selectedGenre={selectedGenre}
-        onSelect={setSelectedGenre}
-      />
-      <div className="container">
-        <p>Selected Genre: {selectedGenre}</p>
-      </div>
+      <header className="App-header">
+        <h1>React Components Example</h1>
+        <h3>Counter Component</h3>
+        <Counter initialValue={10} />
+        <h3>Search Form Component</h3>
+        <SearchForm initialQuery="Tare Zameen Par" />
+        <h3>Genre Select Component</h3>
+        <GenreSelect
+          genres={genres}
+          selectedGenre={selectedGenre}
+          onSelect={setSelectedGenre}
+        />
+        <div className="container">
+          <p>Selected Genre: {selectedGenre}</p>
+        </div>
+      </header>
     </div>
   );
 }
