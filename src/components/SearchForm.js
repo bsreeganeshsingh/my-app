@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Components.css';
 
 function SearchForm({ initialQuery = '', onSearch }) {
   const [query, setQuery] = useState(initialQuery);

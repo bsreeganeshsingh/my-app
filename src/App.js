@@ -2,7 +2,6 @@ import React from 'react';
 import Counter from './components/Counter';
 import SearchForm from './components/SearchForm';
 import GenreSelect from './components/GenreSelect';
-import './App.css';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = React.useState('Action');

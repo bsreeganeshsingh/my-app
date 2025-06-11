@@ -1,4 +1,4 @@
-import './Components.css';
+import React from 'react';
 
 function GenreSelect({ genres, selectedGenre, onSelect }) {
 
