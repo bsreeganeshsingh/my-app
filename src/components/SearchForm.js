@@ -12,6 +12,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
     if (onSearch) {
       onSearch(query);
     }
+    window.alert(`Search triggered for: ${query}`);
   };
 
   const handleKeyDown = (e) => {
@@ -21,7 +22,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
   };
 
   return (
-    <div className="search-form-container">
+    <div className="container">
       <input
         type="text"
         className="search-input"
@@ -30,7 +31,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
         onKeyDown={handleKeyDown}
         placeholder="Enter search query"
       />
-      <button className="button" onClick={triggerSearch}>
+      <button className="search-button" onClick={triggerSearch}>
         Search
       </button>
     </div>
