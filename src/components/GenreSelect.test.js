@@ -1,5 +1,6 @@
+import React from 'react';
+import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import GenreSelect from './GenreSelect';
 
 test('renders all genres as buttons', () => {
@@ -37,3 +38,15 @@ test('click on genre button calls onSelect with genre', async () => {
     expect(window.alert).toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalledWith('Genre selected: Sci-Fi');
 });
+
+test('does not call onSelect if it is not a function', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<GenreSelect genres={['Action', 'Comedy']} selectedGenre="" onSelect={null} />);
+    
+    const button = screen.getByRole('button', { name: 'Action' });
+    fireEvent.click(button);
+    
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
+}
+);
