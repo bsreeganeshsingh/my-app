@@ -1,0 +1,82 @@
+.flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.movieDetails {
+    display: flex;
+    gap: 24px;
+    background-color: #1c1c1c;
+    padding: 20px;
+    color: white;
+    border-radius: 10px;
+
+    .closeButton {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 2;
+        transition: color 0.2s;
+
+        &:hover {
+            color: #ff5252;
+        }
+    }
+
+    .poster {
+        width: 200px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .info {
+        flex: 1;
+
+        .titleRow {
+            @extend .flex;
+            @extend .align-center;
+            gap: 10px;
+
+            h2 {
+                font-size: 1.5rem;
+                margin: 0;
+            }
+
+            .rating {
+                background: #4caf50;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .meta {
+            margin: 10px 0;
+            color: #aaa;
+            display: flex;
+            gap: 20px;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+    }
+}
