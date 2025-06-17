@@ -3,6 +3,7 @@ import './Components.css';
 
 function SearchForm({ initialQuery = '', onSearch }) {
   const [query, setQuery] = useState(initialQuery);
+  const [selectedGenre, setSelectedGenre] = useState(initialQuery);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -13,6 +14,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
       onSearch(query);
     }
     window.alert(`Search triggered for: ${query}`);
+    setSelectedGenre(query);
   };
 
   const handleKeyDown = (e) => {
@@ -34,6 +36,9 @@ function SearchForm({ initialQuery = '', onSearch }) {
       <button className="search-button" onClick={triggerSearch}>
         Search
       </button>
+      <div className="container">
+        <h4>Searched Movie: {selectedGenre}</h4>
+      </div>
     </div>
   );
 }
