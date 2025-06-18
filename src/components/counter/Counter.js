@@ -1,11 +1,11 @@
 import React from "react";
-import './Components.css';
+import './Counter.css';
 
 class Counter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        count: props.initialValue || 0
+      count: props.initialValue || 0
     };
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);

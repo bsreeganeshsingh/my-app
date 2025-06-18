@@ -1,5 +1,5 @@
 import React from 'react';
-import './Components.css';
+import './GenreSelect.css';
 
 function GenreSelect({ genres, selectedGenre, onSelect }) {
 

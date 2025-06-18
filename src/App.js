@@ -1,7 +1,7 @@
 import React from 'react';
-import Counter from './components/Counter';
-import SearchForm from './components/SearchForm';
-import GenreSelect from './components/GenreSelect';
+import Counter from './components/counter/Counter';
+import SearchForm from './components/searchform/SearchForm';
+import GenreSelect from './components/genreselect/GenreSelect';
 import './App.css';
 
 function App() {
