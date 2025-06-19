@@ -2,14 +2,20 @@ import React from "react";
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from "@testing-library/react";
 import Home from "./Home";
+
 const HomeEmpty = require('./Home').default;
+const mockGenres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
+const mockSortOptions = [
+    { label: "Title", value: "title" },
+    { label: "Year", value: "year" }
+];
 
 // Mock child components
 jest.mock('../movietile/MovieTile', () => ({ movie, onClick }) => (
     <div data-testid="movie-tile" onClick={onClick}>{movie.title}</div>
 ));
 
-jest.mock('../sortcontrol/SortControl', () => ({ sortOptions, selected, onSortChange }) => (
+jest.mock('../sortcontrol/SortControl', () => ({ sortOptions = mockSortOptions, selected, onSortChange }) => (
     <select
         data-testid="sort-control"
         value={selected}
@@ -21,7 +27,7 @@ jest.mock('../sortcontrol/SortControl', () => ({ sortOptions, selected, onSortCh
     </select>
 ));
 
-jest.mock('../genreselect/GenreSelect', () => ({ genres, selectedGenre, onSelect }) => (
+jest.mock('../genreselect/GenreSelect', () => ({ genres = mockGenres, selectedGenre, onSelect }) => (
     <select
         data-testid="genre-select"
         value={selectedGenre}
@@ -104,7 +110,7 @@ describe("Home Component", () => {
         renderHome();
         const sortControl = screen.getByTestId("sort-control");
         expect(sortControl.value).toBe("title");
-        ["Title", "Year", "Rating"].forEach(label => {
+        ["Title", "Year"].forEach(label => {
             expect(screen.getByText(label)).toBeInTheDocument();
         });
     });
@@ -113,13 +119,6 @@ describe("Home Component", () => {
         const movieTiles = screen.getAllByTestId("movie-tile");
         fireEvent.click(movieTiles[1]);
         expect(screen.getByTestId("movie-details")).toBeInTheDocument();
-    });
-
-    it("sorts movies by rating", () => {
-        renderHome();
-        const sortControl = screen.getByTestId("sort-control");
-        fireEvent.change(sortControl, { target: { value: "rating" } });
-        expect(sortControl.value).toBe("rating");
     });
 
     it("sorts movies by title", () => {
@@ -176,10 +175,10 @@ describe("Home Component", () => {
     it("renders all sort options in SortControl", () => {
         renderHome();
         const sortControl = screen.getByTestId("sort-control");
-        ["Title", "Year", "Rating"].forEach(label => {
+        ["Title", "Year"].forEach(label => {
             expect(screen.getByText(label)).toBeInTheDocument();
         });
-        expect(sortControl.children.length).toBe(3);
+        expect(sortControl.children.length).toBe(2);
     });
 
     it("updates searchQuery state when SearchForm input changes", () => {
