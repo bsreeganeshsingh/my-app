@@ -20,7 +20,7 @@ function Home() {
         const sortedMovies = [...movieList].sort((a, b) => {
             if (sortOrder === 'title') {
                 return a.title.localeCompare(b.title);
-            } else if (sortOrder === 'year') {
+            } else {
                 return a.year - b.year;
             }
         });
