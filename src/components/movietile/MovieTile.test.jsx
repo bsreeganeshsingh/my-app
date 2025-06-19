@@ -41,14 +41,6 @@ describe("MovieTile Component", () => {
         expect(onClick).toHaveBeenCalled();
     });
 
-    it("calls window.alert when movie tile is clicked", () => {
-        render(<MovieTile movie={movie} />);
-
-        fireEvent.click(screen.getByTestId("movie-tile"));
-
-        expect(window.alert).toHaveBeenCalledWith(`Movie '${movie.title}' is clicked.`);
-    });
-
     it("toggles menu visibility when menu icon is clicked", () => {
         render(<MovieTile movie={movie} />);
 
@@ -88,8 +80,9 @@ describe("MovieTile Component", () => {
     it("does not crash when onClick, onEdit, or onDelete are not provided", () => {
         render(<MovieTile movie={movie} />);
 
-        fireEvent.click(screen.getByTestId("movie-tile"));
-        expect(window.alert).toHaveBeenCalledWith(`Movie '${movie.title}' is clicked.`);
+        expect(() => {
+            fireEvent.click(screen.getByTestId("movie-tile"));
+        }).not.toThrow();
     });
 
     it("does not crash when menu icon is clicked without onEdit or onDelete", () => {

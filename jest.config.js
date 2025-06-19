@@ -17,4 +17,8 @@ module.exports = {
     "\\.stories\\.jsx?$",
     "/src/stories/"
   ],
+  moduleDirectories: [
+    "node_modules",
+    "src"
+  ],
 };

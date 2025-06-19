@@ -13,14 +13,15 @@ describe('Counter Component', () => {
     });
 
     it('should decrement count when - button is clicked', () => {
-        cy.get('.button').contains('-').click();
+        cy.get('.value').should('contain', 'Count: 10');
+        cy.get('[data-cy=decrement]').click();
         cy.get('.value').should('contain', 'Count: 9');
     });
 
     it('should not decrement below zero', () => {
         // Assuming initial value is 9, clicking - button 11 times
         for (let i = 0; i < 11; i++) {
-            cy.get('.button').contains('-').click();
+            cy.get('[data-cy=decrement]').click();
         }
         cy.get('.value').should('contain', 'Count: 0'); // Should not go below zero
     });
@@ -32,8 +33,8 @@ describe('Counter Component', () => {
     });
 
     it('should decrement count multiple times', () => {
-        cy.get('.button').contains('-').click();
-        cy.get('.button').contains('-').click();
+        cy.get('[data-cy=decrement]').click();
+        cy.get('[data-cy=decrement]').click();
         cy.get('.value').should('contain', 'Count: 8'); // Assuming initial value is 10
     });
 });

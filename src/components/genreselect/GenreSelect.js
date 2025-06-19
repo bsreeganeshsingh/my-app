@@ -5,13 +5,12 @@ function GenreSelect({ genres, selectedGenre, onSelect }) {
 
   const handleSelect = (genre) => {
     if (typeof onSelect === 'function') {
-      onSelect(genre);
+      onSelect(genre === selectedGenre ? null : genre);
     }
-    window.alert(`Genre selected: ${genre}`);
   };
 
   return (
-    <div className="container">
+    <div className="genreSelectRow">
       {genres.map((genre) => (
         <button
           key={genre}

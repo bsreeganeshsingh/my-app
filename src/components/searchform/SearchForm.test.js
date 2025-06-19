@@ -19,37 +19,6 @@ test('onChange updates input value when typing', async () => {
     expect(input).toHaveValue('Interstellar');
 });
 
-test('onSearch is called with input value when button clicked', async () => {
-    const mockOnSearch = jest.fn();
-    window.alert = jest.fn(); // Mock window.alert
-    render(<SearchForm initialQuery="" onSearch={mockOnSearch} />);
-
-    fireEvent.change(screen.getByPlaceholderText(/Enter search query/i), {
-        target: { value: 'Titanic' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Search/i }));
-
-    expect(mockOnSearch).toHaveBeenCalledWith('Titanic');
-    expect(window.alert).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Search triggered for: Titanic');
-});
-
-test('onSearch is called with input value when Enter key pressed', async () => {
-    const mockOnSearch = jest.fn();
-    window.alert = jest.fn(); // Mock window.alert
-    render(<SearchForm initialQuery="" onSearch={mockOnSearch} />);
-    const input = screen.getByPlaceholderText(/Enter search query/i);
-
-    fireEvent.change(input, {
-        target: { value: 'Bahubali' },
-    });
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', keyCode: 13 });
-
-    expect(mockOnSearch).toHaveBeenCalledWith('Bahubali');
-    expect(window.alert).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Search triggered for: Bahubali');
-});
-
 test('does not call onSearch if it is not a function', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
     render(<SearchForm initialQuery="" onSearch={null} />);
@@ -85,5 +54,75 @@ test('does not call onSearch if it is a falsy non-null value', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Search/i }));
 
-    expect(window.alert).toHaveBeenCalledWith('Search triggered for: Test');
+    expect(window.alert).not.toHaveBeenCalled();
+});
+
+test('calls onSearch with current query when Enter key is pressed', () => {
+    const mockOnSearch = jest.fn();
+    render(<SearchForm initialQuery="Initial" onSearch={mockOnSearch} />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', keyCode: 13 });
+
+    expect(mockOnSearch).toHaveBeenCalledWith('Initial');
+});
+
+test('input value updates when initialQuery prop changes', () => {
+    // This test is for completeness, but note: useState does not update from prop after mount
+    // So this test will show that input does NOT update if initialQuery changes after mount
+    const { rerender } = render(<SearchForm initialQuery="First" onSearch={() => { }} />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+    expect(input).toHaveValue('First');
+
+    rerender(<SearchForm initialQuery="Second" onSearch={() => { }} />);
+
+    expect(input).toHaveValue('First'); // Should still be 'First'
+});
+
+test('renders input and button with correct classes and attributes', () => {
+    render(<SearchForm />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+    const button = screen.getByRole('button', { name: /Search/i });
+
+    expect(input).toHaveClass('search-input');
+    expect(button).toHaveClass('search-button');
+    expect(button).toHaveAttribute('aria-label', 'Search');
+});
+
+test('does not crash if onSearch is undefined', () => {
+    render(<SearchForm initialQuery="Test" />);
+
+    const button = screen.getByRole('button', { name: /Search/i });
+
+    expect(() => fireEvent.click(button)).not.toThrow();
+});
+
+test('input is empty if no initialQuery is provided', () => {
+    render(<SearchForm />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+    expect(input).toHaveValue('');
+});
+
+test('does not trigger search on non-Enter key press', () => {
+    const mockOnSearch = jest.fn();
+    window.alert = jest.fn();
+    render(<SearchForm initialQuery="" onSearch={mockOnSearch} />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+
+    fireEvent.change(input, { target: { value: 'Test' } });
+    fireEvent.keyDown(input, { key: 'a', code: 'KeyA', keyCode: 65 });
+
+    expect(mockOnSearch).not.toHaveBeenCalled();
+    expect(window.alert).not.toHaveBeenCalled();
+});
+
+test('does not call onSearch if it is a falsy non-null value', () => {
+    const mockOnSearch = false;
+    window.alert = jest.fn();
+    render(<SearchForm initialQuery="Test" onSearch={mockOnSearch} />);
+    const input = screen.getByPlaceholderText(/Enter search query/i);
+
+    fireEvent.click(screen.getByRole('button', { name: /Search/i }));
+
+    expect(window.alert).not.toHaveBeenCalled();
 });

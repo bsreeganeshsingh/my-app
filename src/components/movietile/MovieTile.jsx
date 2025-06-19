@@ -15,7 +15,6 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
         if (onClick) {
             onClick(movie);
         }
-        window.alert(`Movie '${movie.title}' is clicked.`);
     }
 
     const onEditHandler = (e) => {
@@ -37,7 +36,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
     }
 
     return (
-        <div data-testId="movie-tile" className={styles.movieTile} onClick={onClickHandler}>
+        <div data-testid="movie-tile" className={styles.movieTile} onClick={onClickHandler}>
             <img src={movie.imageUrl} alt={movie.title} className={styles.poster} />
             <div className={styles.info}>
                 <div className={styles.titleRow}>

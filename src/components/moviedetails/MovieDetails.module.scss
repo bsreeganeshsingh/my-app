@@ -21,6 +21,11 @@
     padding: 20px;
     color: white;
     border-radius: 10px;
+    align-self: center;
+    width: 80vw;
+    margin: auto;
+    position: relative;
+
 
     .closeButton {
         position: absolute;
@@ -48,6 +53,7 @@
 
     .info {
         flex: 1;
+        text-align: left;
 
         .titleRow {
             @extend .flex;
@@ -74,9 +80,16 @@
             gap: 20px;
         }
 
-        .description {
-            font-size: 1rem;
-            line-height: 1.5;
+        .detailsList {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .detailsList p {
+            margin: 0;
+            padding: 4px 0;
         }
     }
 }

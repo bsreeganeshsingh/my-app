@@ -4,7 +4,7 @@ describe('SearchForm Component', () => {
   });
 
   it('should render input with initial value', () => {
-    cy.get('input.search-input').should('have.value', 'Tare Zameen Par');
+    cy.get('input.search-input').should('have.value', 'Interstellar');
   });
 
   it('should update input on typing', () => {

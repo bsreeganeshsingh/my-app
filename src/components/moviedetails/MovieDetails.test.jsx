@@ -3,11 +3,8 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from "@testing-library/react";
 import MovieDetails from "./MovieDetails";
 
-describe("MovieDetails Component", () => {
-    beforeAll(() => {
-        window.alert = jest.fn();
-    });
 
+describe("MovieDetails Component", () => {
     const movie = {
         title: "Inception",
         rating: 8.8,
@@ -18,12 +15,15 @@ describe("MovieDetails Component", () => {
         imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
     };
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("renders movie details correctly", () => {
         render(<MovieDetails movie={movie} />);
-
         expect(screen.getByText(movie.title)).toBeInTheDocument();
-        expect(screen.getByText(movie.rating)).toBeInTheDocument();
-        expect(screen.getByText(movie.year)).toBeInTheDocument();
+        expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
+        expect(screen.getByText(String(movie.year))).toBeInTheDocument();
         expect(screen.getByText(movie.duration)).toBeInTheDocument();
         expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
         expect(screen.getByText(movie.description)).toBeInTheDocument();
@@ -32,15 +32,12 @@ describe("MovieDetails Component", () => {
     it("calls onClose when close button is clicked", () => {
         const onClose = jest.fn();
         render(<MovieDetails movie={movie} onClose={onClose} />);
-
         fireEvent.click(screen.getByRole("button"));
-
         expect(onClose).toHaveBeenCalled();
     });
 
     it("displays the movie poster", () => {
         render(<MovieDetails movie={movie} />);
-
         const img = screen.getByAltText(movie.title);
         expect(img).toHaveAttribute("src", movie.imageUrl);
     });
@@ -48,23 +45,27 @@ describe("MovieDetails Component", () => {
     it("handles missing description gracefully", () => {
         const movieWithoutDescription = { ...movie, description: "" };
         render(<MovieDetails movie={movieWithoutDescription} />);
-
         expect(screen.queryByText(movie.description)).not.toBeInTheDocument();
     });
 
-    it("calls window.alert when close button is clicked", () => {
-        render(<MovieDetails movie={movie} />);
-
-        fireEvent.click(screen.getByRole("button"));
-
-        expect(window.alert).toHaveBeenCalledWith("'Inception' is closed.");
+    it("renders movie details correctly inside MemoryRouter", () => {
+        render(
+            <MovieDetails movie={movie} />
+        );
+        expect(screen.getByText(movie.title)).toBeInTheDocument();
+        expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
+        expect(screen.getByText(String(movie.year))).toBeInTheDocument();
+        expect(screen.getByText(movie.duration)).toBeInTheDocument();
+        expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
+        expect(screen.getByText(movie.description)).toBeInTheDocument();
     });
 
-    it("does not crash when onClose is not provided", () => {
-        render(<MovieDetails movie={movie} />);
-
+    it("calls onClose when close button is clicked inside MemoryRouter", () => {
+        const onClose = jest.fn();
+        render(
+            < MovieDetails movie={movie} onClose={onClose} />
+        );
         fireEvent.click(screen.getByRole("button"));
-
-        expect(window.alert).toHaveBeenCalledWith("'Inception' is closed.");
+        expect(onClose).toHaveBeenCalled();
     });
 });

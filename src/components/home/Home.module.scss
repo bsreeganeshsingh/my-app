@@ -1,0 +1,35 @@
+.home {
+    padding: 32px 0px;
+    background-color: #282c34;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #22223b;
+    margin-bottom: 32px;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+}
+
+.movieGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    width: 90vw;
+    margin: 10px 120px 10px;
+    padding: 16px 32px;
+    box-sizing: border-box;
+}
+
+.controlsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    margin: 2rem auto 1rem auto;
+    padding: 0 32px;
+}

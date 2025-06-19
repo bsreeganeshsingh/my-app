@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './MovieDetails.module.scss';
 
 const MovieDetails = ({ movie, onClose }) => {
+
     const handleClose = () => {
         if (onClose) {
             onClose();
         }
-        window.alert(`'${movie.title}' is closed.`);
     };
 
     return (
@@ -23,24 +22,19 @@ const MovieDetails = ({ movie, onClose }) => {
                     <span className={styles.year}>{movie.year}</span>
                     <span>{movie.duration}</span>
                 </div>
-                <p><strong>Genres:</strong> {movie.genres.join(', ')}</p>
-                <p><strong>Description:</strong> {movie.description}</p>
+                <div className={styles.detailsList}>
+                    <p><strong>Genres:</strong> {movie.genres.join(', ')}</p>
+                    <p><strong>Description:</strong> {movie.description}</p>
+                    <p><strong>Director:</strong> {movie.director || 'N/A'}</p>
+                    <p><strong>Cast:</strong> {movie.cast ? movie.cast.join(', ') : 'N/A'}</p>
+                    <p><strong>Box Office:</strong> {movie.boxOffice || 'N/A'}</p>
+                    <p><strong>Awards:</strong> {movie.awards || 'N/A'}</p>
+                    <p><strong>Language:</strong> {movie.language || 'N/A'}</p>
+                    <p><strong>Country:</strong> {movie.country || 'N/A'}</p>
+                </div>
             </div>
         </div>
     );
 }
-
-MovieDetails.propTypes = {
-    movie: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        rating: PropTypes.number.isRequired,
-        duration: PropTypes.string.isRequired,
-        year: PropTypes.number.isRequired,
-        genres: PropTypes.arrayOf(PropTypes.string).isRequired,
-        description: PropTypes.string,
-        imageUrl: PropTypes.string.isRequired,
-    }).isRequired,
-    onClose: PropTypes.func,
-};
 
 export default MovieDetails;

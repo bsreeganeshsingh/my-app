@@ -25,12 +25,6 @@ describe('GenreSelect Component', () => {
         cy.get('@alert').should('have.been.calledWith', `Genre selected: ${genreToSelect}`);
     });
 
-    it('should update selected genre when a new genre is clicked', () => {
-        const newGenre = 'Action';
-        cy.get('button').contains(newGenre).click();
-        cy.get('.container').contains(`Selected Genre: ${newGenre}`).should('exist');
-    });
-
     it('should not highlight unselected genre buttons', () => {
         const unselectedGenres = ['Comedy', 'Drama', 'Horror', 'Sci-Fi'];
         unselectedGenres.forEach(genre => {

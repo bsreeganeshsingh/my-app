@@ -1,8 +1,3 @@
-.container {
-    text-align: center;
-    margin-top: 50px;
-}
-
 .button {
     padding: 8px 12px;
     margin: 0 5px;
@@ -14,4 +9,11 @@
     background-color: #007BFF;
     color: #fff;
     border-color: #007BFF;
+}
+
+.genreSelectRow {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
 }
