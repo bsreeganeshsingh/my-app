@@ -2,7 +2,7 @@ import React from 'react';
 import Counter from './Counter';
 
 export default {
-    title: 'Components/Counter',
+    title: 'components/counter/Counter',
     component: Counter,
     args: {
         initialValue: 10,
