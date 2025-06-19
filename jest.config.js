@@ -10,5 +10,15 @@ module.exports = {
   testEnvironment: "jsdom",
   moduleNameMapper: {
     "\\.css$": "<rootDir>/styleMock.js",
+    "\\.scss$": "identity-obj-proxy",
   },
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "\\.stories\\.jsx?$",
+    "/src/stories/"
+  ],
+  moduleDirectories: [
+    "node_modules",
+    "src"
+  ],
 };

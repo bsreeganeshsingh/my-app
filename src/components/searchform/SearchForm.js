@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Components.css';
+import './SearchForm.css';
 
 function SearchForm({ initialQuery = '', onSearch }) {
   const [query, setQuery] = useState(initialQuery);
@@ -12,7 +12,6 @@ function SearchForm({ initialQuery = '', onSearch }) {
     if (onSearch) {
       onSearch(query);
     }
-    window.alert(`Search triggered for: ${query}`);
   };
 
   const handleKeyDown = (e) => {
@@ -30,8 +29,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder="Enter search query"
-      />
-      <button className="search-button" onClick={triggerSearch}>
+      /><button className="search-button" onClick={triggerSearch} aria-label="Search">
         Search
       </button>
     </div>

@@ -1,11 +1,11 @@
 import React from "react";
-import './Components.css';
+import './Counter.css';
 
 class Counter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        count: props.initialValue || 0
+      count: props.initialValue || 0
     };
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
@@ -26,8 +26,8 @@ class Counter extends React.Component {
   render() {
     return React.createElement('div', { className: 'container' },
       React.createElement('h2', { className: 'value' }, `Count: ${this.state.count}`),
-      React.createElement('button', { onClick: this.decrement, className: 'button' }, '-'),
-      React.createElement('button', { onClick: this.increment, className: 'button' }, '+')
+      React.createElement('button', { onClick: this.decrement, className: 'button', 'data-cy': 'decrement' }, '-'),
+      React.createElement('button', { onClick: this.increment, className: 'button', 'data-cy': 'increment' }, '+')
     );
   }
 }

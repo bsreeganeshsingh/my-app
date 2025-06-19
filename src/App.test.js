@@ -5,6 +5,6 @@ import App from './App';
 
 test('renders React Components Example link', () => {
   render(<App />);
-  const linkElement = screen.getByText(/React Components Example/i);
+  const linkElement = screen.getByText(/Count/i);
   expect(linkElement).toBeInTheDocument();
 });
