@@ -7,8 +7,7 @@ const config = {
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   "addons": [
-    "@storybook/preset-create-react-app",
-    "@storybook/addon-docs"
+    "@storybook/preset-create-react-app"
   ],
   "framework": {
     "name": "@storybook/react-webpack5",

@@ -5,6 +5,7 @@ import GenreSelect from '../genreselect/GenreSelect';
 import SearchForm from '../searchform/SearchForm';
 import MovieDetails from '../moviedetails/MovieDetails';
 import { movies } from '../../utils/movieList';
+import { genres, sortOptions } from '../../utils/Constants';
 import styles from './Home.module.scss';
 
 function Home() {
@@ -14,13 +15,6 @@ function Home() {
     const [selectedGenre, setSelectedGenre] = useState('Action');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const genres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
-    const sortOptions = [
-        { label: "Title", value: "title" },
-        { label: "Year", value: "year" },
-        { label: "Rating", value: "rating" }
-    ];
-
     const handleSortChange = (sortOrder) => {
         setSortOrder(sortOrder);
         const sortedMovies = [...movieList].sort((a, b) => {
@@ -28,8 +22,6 @@ function Home() {
                 return a.title.localeCompare(b.title);
             } else if (sortOrder === 'year') {
                 return a.year - b.year;
-            } else if (sortOrder === 'rating') {
-                return b.rating - a.rating;
             }
         });
         setMovieList(sortedMovies);
