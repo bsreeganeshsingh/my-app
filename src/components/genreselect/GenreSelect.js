@@ -1,7 +1,7 @@
 import React from 'react';
 import './GenreSelect.css';
 
-function GenreSelect({ genres = [], selectedGenre, onSelect }) {
+function GenreSelect({ genres, selectedGenre, onSelect }) {
 
   const handleSelect = (genre) => {
     if (typeof onSelect === 'function') {

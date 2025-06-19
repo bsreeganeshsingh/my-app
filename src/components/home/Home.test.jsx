@@ -1,14 +1,10 @@
 import React from "react";
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from "@testing-library/react";
+import { genres as mockGenres, sortOptions as mockSortOptions } from '../../utils/Constants';
 import Home from "./Home";
 
 const HomeEmpty = require('./Home').default;
-const mockGenres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
-const mockSortOptions = [
-    { label: "Title", value: "title" },
-    { label: "Year", value: "year" }
-];
 
 // Mock child components
 jest.mock('../movietile/MovieTile', () => ({ movie, onClick }) => (
@@ -27,13 +23,13 @@ jest.mock('../sortcontrol/SortControl', () => ({ sortOptions = mockSortOptions, 
     </select>
 ));
 
-jest.mock('../genreselect/GenreSelect', () => ({ genres = mockGenres, selectedGenre, onSelect }) => (
+jest.mock('../genreselect/GenreSelect', () => ({ genres, selectedGenre, onSelect }) => (
     <select
         data-testid="genre-select"
         value={selectedGenre}
         onChange={e => onSelect(e.target.value)}
     >
-        {genres.map(g => (
+        {mockGenres.map(g => (
             <option key={g} value={g}>{g}</option>
         ))}
     </select>
