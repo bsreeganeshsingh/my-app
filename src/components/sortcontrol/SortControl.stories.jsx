@@ -8,8 +8,6 @@ export default {
         sortOptions: [
             { label: "Title (A-Z)", value: "title-ascending" },
             { label: "Title (Z-A)", value: "title-descending" },
-            { label: "Rating (Low to High)", value: "rating-ascending" },
-            { label: "Rating (High to Low)", value: "rating-descending" },
             { label: "Year (Oldest First)", value: "year-ascending" },
             { label: "Year (Newest First)", value: "year-descending" },
         ],
