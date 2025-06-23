@@ -15,7 +15,7 @@ const SortControl = ({ sortOptions, selected: initialSelected, onSortChange }) =
 
     return (
         <div className={styles.sortControl}>
-            <label htmlFor="sortSelected">Sort by:</label>
+            <label htmlFor="sortSelected">SORT BY:</label>
             <select
                 data-testid="sortSelected"
                 id="sortSelect"

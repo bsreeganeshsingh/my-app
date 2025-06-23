@@ -5,8 +5,8 @@ import SortControl from "./SortControl";
 
 describe("SortControl Component", () => {
     const sortOptions = [
-        { label: "Title", value: "title" },
-        { label: "Year", value: "year" }
+        { label: "TITLE", value: "title" },
+        { label: "YEAR", value: "year" }
     ];
     const mockOnSort = jest.fn();
 
@@ -16,18 +16,18 @@ describe("SortControl Component", () => {
     });
 
     it("renders sort options", () => {
-        expect(screen.getByText("Sort by:")).toBeInTheDocument();
-        expect(screen.getByText("Title")).toBeInTheDocument();
-        expect(screen.getByText("Year")).toBeInTheDocument();
+        expect(screen.getByText("SORT BY:")).toBeInTheDocument();
+        expect(screen.getByText("TITLE")).toBeInTheDocument();
+        expect(screen.getByText("YEAR")).toBeInTheDocument();
     });
 
     it("calls onSort with correct parameters when sort option is selected", () => {
-        // Open the dropdown and select "Title"
+        // Open the dropdown and select "TITLE"
         fireEvent.change(screen.getByTestId("sortSelected"), { target: { value: "title" } });
         expect(mockOnSort).toHaveBeenCalledWith("title");
         mockOnSort.mockClear();
 
-        // Open the dropdown and select "Year"
+        // Open the dropdown and select "YEAR"
         fireEvent.change(screen.getByTestId("sortSelected"), { target: { value: "year" } });
         expect(mockOnSort).toHaveBeenCalledWith("year");
         mockOnSort.mockClear();

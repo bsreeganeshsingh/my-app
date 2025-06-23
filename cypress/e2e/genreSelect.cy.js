@@ -5,19 +5,19 @@ describe('GenreSelect Component', () => {
 
 
     it('should render buttons for each genre', () => {
-        const genres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
+        const genres = ['ACTION', 'COMEDY', 'DRAMA', 'HORROR', 'SCI-FI'];
         genres.forEach(genre => {
             cy.get('button').contains(genre).should('exist');
         });
     });
 
     it('should highlight the selected genre button', () => {
-        const selectedGenre = 'Comedy';
+        const selectedGenre = 'COMEDY';
         cy.get('button').contains(selectedGenre).click().should('have.class', 'selected');
     });
 
     it('should call onSelect with genre when button is clicked', () => {
-        const genreToSelect = 'Sci-Fi';
+        const genreToSelect = 'SCI-FI';
         cy.window().then((win) => {
             cy.stub(win, 'alert').as('alert');
         });
@@ -26,7 +26,7 @@ describe('GenreSelect Component', () => {
     });
 
     it('should not highlight unselected genre buttons', () => {
-        const unselectedGenres = ['Comedy', 'Drama', 'Horror', 'Sci-Fi'];
+        const unselectedGenres = ['COMEDY', 'DRAMA', 'HORROR', 'SCI-FI'];
         unselectedGenres.forEach(genre => {
             cy.get('button').contains(genre).should('not.have.class', 'selected');
         });

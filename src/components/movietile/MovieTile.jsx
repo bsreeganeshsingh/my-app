@@ -20,19 +20,13 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
     const onEditHandler = (e) => {
         e.stopPropagation(); // Prevent click from propagating to the tile
         setShowMenu(false); // Close menu on edit
-        if (onEdit) {
-            onEdit(movie);
-        }
-        window.alert(`Edit '${movie.title}' is clicked.`);
+        onEdit?.(movie);
     }
 
     const onDeleteHandler = (e) => {
         e.stopPropagation(); // Prevent click from propagating to the tile
         setShowMenu(false); // Close menu on delete
-        if (onDelete) {
-            onDelete(movie);
-        }
-        window.alert(`Delete '${movie.title}' is clicked.`);
+        onDelete?.(movie);
     }
 
     return (

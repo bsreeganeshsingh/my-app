@@ -10,7 +10,7 @@ describe("MovieDetails Component", () => {
         rating: 8.8,
         duration: "2h 28m",
         year: 2010,
-        genres: ["Action", "Sci-Fi", "Adventure"],
+        genres: ["ACTION", "SCI-FI", "ADVENTURE"],
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
         imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
     };
@@ -67,5 +67,27 @@ describe("MovieDetails Component", () => {
         );
         fireEvent.click(screen.getByRole("button"));
         expect(onClose).toHaveBeenCalled();
+    });
+
+    it("displays fallback text for optional fields when not provided", () => {
+        const partialMovie = {
+            ...movie,
+            cast: undefined,
+            director: undefined,
+            boxOffice: undefined,
+            awards: undefined,
+            language: undefined,
+            country: undefined,
+        };
+
+        render(<MovieDetails movie={partialMovie} />);
+
+        expect(screen.getAllByText("N/A").length).toBe(6); // Total 6 fallback fields
+    });
+
+    it("does not crash when onClose is not provided", () => {
+        render(<MovieDetails movie={movie} />);
+        fireEvent.click(screen.getByRole("button")); // Should not throw error
+        expect(screen.getByRole("button")).toBeInTheDocument(); // Confirm button exists
     });
 });
