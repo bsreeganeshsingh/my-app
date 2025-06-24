@@ -35,7 +35,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
             <div className={styles.info}>
                 <div className={styles.titleRow}>
                     <h3>{movie.title}</h3>
-                    <span className={styles.year}>{movie.year}</span>
+                    <span className={styles.releaseDate}>{movie.releaseDate.substring(0, 4)}</span>
                     <div className={styles.menuIcon} onClick={toggleMenu}>
                         ⋮
                         {showMenu && (
@@ -55,7 +55,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
 MovieTile.propTypes = {
     movie: PropTypes.shape({
         title: PropTypes.string.isRequired,
-        year: PropTypes.number.isRequired,
+        releaseDate: PropTypes.number.isRequired,
         imageUrl: PropTypes.string.isRequired,
         genres: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,

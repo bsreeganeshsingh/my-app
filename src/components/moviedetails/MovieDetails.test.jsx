@@ -9,7 +9,7 @@ describe("MovieDetails Component", () => {
         title: "Inception",
         rating: 8.8,
         duration: "2h 28m",
-        year: 2010,
+        releaseDate: "2010-10-12",
         genres: ["ACTION", "SCI-FI", "ADVENTURE"],
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
         imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
@@ -23,7 +23,7 @@ describe("MovieDetails Component", () => {
         render(<MovieDetails movie={movie} />);
         expect(screen.getByText(movie.title)).toBeInTheDocument();
         expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
-        expect(screen.getByText(String(movie.year))).toBeInTheDocument();
+        expect(screen.getByText(String(movie.releaseDate))).toBeInTheDocument();
         expect(screen.getByText(movie.duration)).toBeInTheDocument();
         expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
         expect(screen.getByText(movie.description)).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe("MovieDetails Component", () => {
         );
         expect(screen.getByText(movie.title)).toBeInTheDocument();
         expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
-        expect(screen.getByText(String(movie.year))).toBeInTheDocument();
+        expect(screen.getByText(String(movie.releaseDate))).toBeInTheDocument();
         expect(screen.getByText(movie.duration)).toBeInTheDocument();
         expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
         expect(screen.getByText(movie.description)).toBeInTheDocument();

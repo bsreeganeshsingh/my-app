@@ -60,7 +60,7 @@ jest.mock('../moviedetails/MovieDetails', () => ({ movie, onClose }) => (
 const mockOnSubmit = jest.fn();
 jest.mock('../movieform/MovieForm', () => ({ initialData, onSubmit }) => (
     <div data-testid="movie-form">
-        <button onClick={() => onSubmit({ title: "New Movie", year: 2023, duration: 120 })}>Submit</button>
+        <button onClick={() => onSubmit({ title: "New Movie", releaseDate: 2023, duration: 120 })}>Submit</button>
     </div>
 ));
 

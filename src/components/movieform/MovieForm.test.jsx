@@ -10,21 +10,25 @@ describe('MovieForm', () => {
 
     const initialData = {
         title: 'Inception',
-        year: '2010',
-        duration: '148',
+        releaseDate: '2010-12-24',
+        duration: '2h 28m',
         rating: '8.8',
         description: 'A mind-bending thriller',
         imageUrl: 'http://example.com/image.jpg',
-        genres: ['Sci-Fi', 'Thriller'],
+        genres: ['SCI-FI', 'THRILLER'],
     };
 
-    const fillForm = (getByLabelText) => {
+    const fillForm = (getByLabelText, getByText) => {
         fireEvent.change(getByLabelText(/TITLE/i), { target: { value: 'The Matrix' } });
-        fireEvent.change(getByLabelText(/YEAR/i), { target: { value: '1999' } });
-        fireEvent.change(getByLabelText(/DURATION/i), { target: { value: '136' } });
+        fireEvent.change(getByLabelText(/RELEASE DATE/i), { target: { value: '2001-03-31' } });
+        fireEvent.change(getByLabelText(/DURATION/i), { target: { value: '2h 16m' } });
         fireEvent.change(getByLabelText(/RATING/i), { target: { value: '9.0' } });
         fireEvent.change(getByLabelText(/DESCRIPTION/i), { target: { value: 'Neo discovers the truth' } });
-        fireEvent.change(getByLabelText(/GENRES/i), { target: { value: 'ACTION, SCI-FI' } });
+        // Click to open genres dropdown
+        const dropdownHeader = getByText(/SELECT GENRES/i);
+        fireEvent.click(dropdownHeader);
+        fireEvent.click(getByText('ACTION').previousSibling);
+        fireEvent.click(getByText('ADVENTURE').previousSibling);
         fireEvent.change(getByLabelText(/IMAGE URL/i), { target: { value: 'http://matrix.com/image.png' } });
     };
 
@@ -33,15 +37,9 @@ describe('MovieForm', () => {
     });
 
     it('renders with default empty values when no initialData is provided', () => {
-        const { getByLabelText } = render(<MovieForm {...defaultProps} />);
+        const { getByLabelText, getByText } = render(<MovieForm {...defaultProps} />);
         expect(getByLabelText(/TITLE/i).value).toBe('');
-        expect(getByLabelText(/Genres/i).value).toBe('');
-    });
-
-    it('renders with initialData and converts genres array to string', () => {
-        const { getByLabelText } = render(<MovieForm {...defaultProps} initialData={initialData} />);
-        expect(getByLabelText(/TITLE/i).value).toBe('Inception');
-        expect(getByLabelText(/GENRES/i).value).toBe('Sci-Fi, Thriller');
+        expect(getByText(/SELECT GENRES/i)).toBeInTheDocument();
     });
 
     it('handles input changes', () => {
@@ -53,16 +51,16 @@ describe('MovieForm', () => {
     it('calls onSubmit with parsed values when form is submitted', () => {
         const handleSubmit = jest.fn();
         const { getByLabelText, getByText } = render(<MovieForm onSubmit={handleSubmit} />);
-        fillForm(getByLabelText);
+        fillForm(getByLabelText, getByText);
         fireEvent.click(getByText(/SUBMIT/i));
 
         expect(handleSubmit).toHaveBeenCalledWith({
             title: 'The Matrix',
-            year: '1999',
-            duration: '136',
+            releaseDate: '2001-03-31',
+            duration: '2h 16m',
             rating: 9.0,
             description: 'Neo discovers the truth',
-            genres: ['ACTION', 'SCI-FI'],
+            genres: ['ACTION', 'ADVENTURE'],
             imageUrl: 'http://matrix.com/image.png',
         });
     });
@@ -98,10 +96,10 @@ describe('MovieForm', () => {
 
     it('handles empty genres and non-array types correctly', () => {
         const emptyGenresData = { ...initialData, genres: '' };
-        const { getByLabelText } = render(
+        const { getByText } = render(
             <MovieForm {...defaultProps} initialData={emptyGenresData} />
         );
-        expect(getByLabelText(/GENRES/i).value).toBe('');
+        expect(getByText(/SELECT GENRES/i)).toBeInTheDocument();
     });
 
     it('resets the form without crashing when onReset is undefined', () => {

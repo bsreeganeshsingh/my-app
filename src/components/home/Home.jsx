@@ -28,7 +28,7 @@ function Home() {
             if (sortOrder === 'title') {
                 return a.title.localeCompare(b.title);
             } else {
-                return a.year - b.year;
+                return parseInt(a.releaseDate.substring(0, 4)) - parseInt(b.releaseDate.substring(0, 4));
             }
         });
         setMovieList(sortedMovies);

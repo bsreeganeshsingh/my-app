@@ -2,7 +2,7 @@ export const movies = [
     {
         id: 1001,
         title: 'Inception',
-        year: '2010',
+        releaseDate: '2010-03-24',
         rating: 8.8,
         duration: '2h 28m',
         genres: ['ACTION', 'SCI-FI', 'ADVENTURE'],
@@ -18,7 +18,7 @@ export const movies = [
     {
         id: 1002,
         title: 'Interstellar',
-        year: '2014',
+        releaseDate: '2014-05-25',
         rating: 8.6,
         duration: '2h 49m',
         genres: ['DRAMA', 'SCI-FI', 'ADVENTURE'],
@@ -34,7 +34,7 @@ export const movies = [
     {
         id: 1003,
         title: 'The Dark Knight',
-        year: '2008',
+        releaseDate: '2008-01-20',
         rating: 9.0,
         duration: '2h 32m',
         genres: ['ACTION', 'CRIME', 'DRAMA'],
@@ -50,7 +50,7 @@ export const movies = [
     {
         id: 1004,
         title: 'Forrest Gump',
-        year: '1994',
+        releaseDate: '1994-03-31',
         rating: 8.8,
         duration: '2h 22m',
         genres: ['DRAMA', 'ROMANCE'],
@@ -66,7 +66,7 @@ export const movies = [
     {
         id: 1005,
         title: 'The Shawshank Redemption',
-        year: '1994',
+        releaseDate: '1994-09-25',
         rating: 9.3,
         duration: '2h 22m',
         genres: ['DRAMA'],
@@ -82,7 +82,7 @@ export const movies = [
     {
         id: 1006,
         title: 'Pulp Fiction',
-        year: '1994',
+        releaseDate: '1994-09-02',
         rating: 8.9,
         duration: '2h 34m',
         genres: ['CRIME', 'DRAMA'],
@@ -98,7 +98,7 @@ export const movies = [
     {
         id: 1007,
         title: 'The Godfather',
-        year: '1972',
+        releaseDate: '1972-08-15',
         rating: 9.2,
         duration: '2h 55m',
         genres: ['CRIME', 'DRAMA'],
@@ -114,7 +114,7 @@ export const movies = [
     {
         id: 1008,
         title: 'The Matrix',
-        year: '1999',
+        releaseDate: '1999-10-15',
         rating: 8.7,
         duration: '2h 16m',
         genres: ['ACTION', 'SCI-FI'],
@@ -130,7 +130,7 @@ export const movies = [
     {
         id: 1009,
         title: 'Fight Club',
-        year: '1999',
+        releaseDate: '1999-08-22',
         rating: 8.8,
         duration: '2h 19m',
         genres: ['DRAMA'],
@@ -146,7 +146,7 @@ export const movies = [
     {
         id: 1010,
         title: 'The Lord of the Rings: The Fellowship of the Ring',
-        year: '2001',
+        releaseDate: '2001-05-15',
         rating: 8.8,
         duration: '2h 58m',
         genres: ['ADVENTURE', 'DRAMA', 'FANTASY'],
@@ -162,7 +162,7 @@ export const movies = [
     {
         id: 1011,
         title: 'Gladiator',
-        year: '2000',
+        releaseDate: '2000-09-30',
         rating: 8.5,
         duration: '2h 35m',
         genres: ['ACTION', 'ADVENTURE', 'DRAMA'],
@@ -178,7 +178,7 @@ export const movies = [
     {
         id: 1012,
         title: 'The Lion King',
-        year: '1994',
+        releaseDate: '1994-04-02',
         rating: 8.5,
         duration: '1h 28m',
         genres: ['ANIMATION', 'ADVENTURE', 'DRAMA'],
@@ -194,7 +194,7 @@ export const movies = [
     {
         id: 1013,
         title: 'Jurassic Park',
-        year: '1993',
+        releaseDate: '1993-03-02',
         rating: 8.2,
         duration: '2h 7m',
         genres: ['ADVENTURE', 'SCI-FI', 'THRILLER'],
@@ -210,7 +210,7 @@ export const movies = [
     {
         id: 1014,
         title: 'Titanic',
-        year: '1997',
+        releaseDate: '1997-10-14',
         rating: 7.9,
         duration: '3h 15m',
         genres: ['DRAMA', 'ROMANCE'],
@@ -226,7 +226,7 @@ export const movies = [
     {
         id: 1015,
         title: 'The Avengers',
-        year: '2012',
+        releaseDate: '2012-12-12',
         rating: 8.0,
         duration: '2h 23m',
         genres: ['ACTION', 'ADVENTURE', 'SCI-FI'],
@@ -242,7 +242,7 @@ export const movies = [
     {
         id: 1016,
         title: 'Avatar',
-        year: '2009',
+        releaseDate: '2009-12-24',
         rating: 7.8,
         duration: '2h 42m',
         genres: ['ACTION', 'ADVENTURE', 'FANTASY'],
@@ -258,7 +258,7 @@ export const movies = [
     {
         id: 1017,
         title: 'The Silence of the Lambs',
-        year: '1991',
+        releaseDate: '199-06-01',
         rating: 8.6,
         duration: '1h 58m',
         genres: ['CRIME', 'DRAMA', 'THRILLER'],
@@ -274,7 +274,7 @@ export const movies = [
     {
         id: 1018,
         title: 'Saving Private Ryan',
-        year: '1998',
+        releaseDate: '1998-04-11',
         rating: 8.6,
         duration: '2h 49m',
         genres: ['DRAMA', 'WAR'],
@@ -290,7 +290,7 @@ export const movies = [
     {
         id: 1019,
         title: 'The Prestige',
-        year: '2006',
+        releaseDate: '2006-08-11',
         rating: 8.5,
         duration: '2h 10m',
         genres: ['DRAMA', 'MYSTERY', 'SCI-FI'],
@@ -306,7 +306,7 @@ export const movies = [
     {
         id: 1020,
         title: 'Whiplash',
-        year: '2014',
+        releaseDate: '2014-02-29',
         rating: 8.5,
         duration: '1h 46m',
         genres: ['DRAMA', 'MUSIC'],
@@ -323,7 +323,7 @@ export const movies = [
     {
         id: 1021,
         title: '3 Idiots',
-        year: '2009',
+        releaseDate: '2009-09-19',
         rating: 8.4,
         duration: '2h 50m',
         genres: ['COMEDY', 'DRAMA'],
@@ -339,7 +339,7 @@ export const movies = [
     {
         id: 1022,
         title: 'Dangal',
-        year: '2016',
+        releaseDate: '2016-07-07',
         rating: 8.3,
         duration: '2h 41m',
         genres: ['Biography', 'DRAMA', 'SPORT'],
@@ -355,7 +355,7 @@ export const movies = [
     {
         id: 1023,
         title: 'Gully Boy',
-        year: '2019',
+        releaseDate: '2019-10-03',
         rating: 8.0,
         duration: '2h 34m',
         genres: ['DRAMA', 'MUSIC'],
@@ -371,7 +371,7 @@ export const movies = [
     {
         id: 1024,
         title: 'Lagaan: Once Upon a Time in India',
-        year: '2001',
+        releaseDate: '2001-11-02',
         rating: 8.1,
         duration: '3h 44m',
         genres: ['ADVENTURE', 'DRAMA', 'MUSIC'],

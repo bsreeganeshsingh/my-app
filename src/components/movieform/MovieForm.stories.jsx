@@ -17,7 +17,7 @@ export const EditMovieForm = {
   args: {
     initialData: {
       title: 'OG',
-      year: '2025',
+      releaseDate: '2025',
       duration: '2h 48m',
       rating: '9.9',
       description: 'Original Gangstar',
@@ -32,7 +32,7 @@ export const MissingRequiredFields = {
   args: {
     initialData: {
       title: '',
-      year: '',
+      releaseDate: '',
       duration: '',
       rating: '',
       description: '',
