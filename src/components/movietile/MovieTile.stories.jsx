@@ -7,9 +7,9 @@ export default {
     args: {
         movie: {
             title: "Inception",
-            year: 2010,
+            releaseDate: "2010-10-20",
             imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
-            genres: ["Sci - File", "Action", "Adventure"],
+            genres: ["SCI-FI", "ACTION", "ADVENTURE"],
         },
     },
 };
@@ -18,9 +18,9 @@ export const InterstellarMovieTileStory = () => (
     <MovieTile
         movie={{
             title: "Interstellar",
-            year: 2014,
+            releaseDate: "2014-12-12",
             imageUrl: "https://images-cdn.ubuy.co.in/6352289f38bb253c44612d53-interstellar-movie-poster-24-x-36-inches.jpg",
-            genres: ["Sci-Fi", "Adventure", "Drama"],
+            genres: ["SCI-FI", "ADVENTURE", "DRAMA"],
         }}
     />
 );
@@ -28,9 +28,9 @@ export const TheDarkKnightMovieTileStory = () => (
     <MovieTile
         movie={{
             title: "The Dark Knight",
-            year: 2008,
+            releaseDate: "2008-10-15",
             imageUrl: "https://filmartgallery.com/cdn/shop/files/The-Dark-Knight-Vintage-Movie-Poster-Original_51aa2163.jpg?v=1741715850",
-            genres: ["Action", "Crime", "Drama"],
+            genres: ["ACTION", "CRIME", "DRAMA"],
         }}
     />
 );

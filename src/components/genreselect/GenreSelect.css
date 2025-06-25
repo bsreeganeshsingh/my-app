@@ -3,12 +3,14 @@
     margin: 0 5px;
     font-size: 16px;
     cursor: pointer;
+    border: none;
 }
 
 .button.selected {
-    background-color: #007BFF;
+    background-color: #f65261;
     color: #fff;
-    border-color: #007BFF;
+    background-color: #d33c49;
+    border: none;
 }
 
 .genreSelectRow {

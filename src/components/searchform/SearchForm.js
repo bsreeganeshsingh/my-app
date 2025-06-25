@@ -30,7 +30,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
         onKeyDown={handleKeyDown}
         placeholder="Enter search query"
       /><button className="search-button" onClick={triggerSearch} aria-label="Search">
-        Search
+        SEARCH
       </button>
     </div>
   );

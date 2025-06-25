@@ -1,10 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { genres } from "../../utils/Constants"
 import GenreSelect from './GenreSelect';
 
 test('renders all genres as buttons', () => {
-    const genres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
     render(<GenreSelect genres={genres} selectedGenre="" onSelect={() => { }} />);
 
     genres.forEach(genre => {
@@ -13,12 +13,11 @@ test('renders all genres as buttons', () => {
 });
 
 test('component highlights selected genre', () => {
-    const genres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
-    render(<GenreSelect genres={genres} selectedGenre="Comedy" onSelect={() => { }} />);
+    render(<GenreSelect genres={genres} selectedGenre="COMEDY" onSelect={() => { }} />);
 
     genres.forEach(genre => {
         const button = screen.getByRole('button', { name: genre });
-        if (genre === 'Comedy') {
+        if (genre === 'COMEDY') {
             expect(button).toHaveClass('selected');
         } else {
             expect(button).not.toHaveClass('selected');
@@ -29,22 +28,31 @@ test('component highlights selected genre', () => {
 test('click on genre button calls onSelect with genre', async () => {
     const mockOnSelect = jest.fn();
     window.alert = jest.fn(); // Mock window.alert
-    render(<GenreSelect genres={['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi']} selectedGenre="" onSelect={mockOnSelect} />);
-    const button = screen.getByRole('button', { name: 'Sci-Fi' });
+    render(<GenreSelect genres={genres} selectedGenre="" onSelect={mockOnSelect} />);
+    const button = screen.getByRole('button', { name: 'SCI-FI' });
 
     fireEvent.click(button);
 
-    expect(mockOnSelect).toHaveBeenCalledWith('Sci-Fi');
+    expect(mockOnSelect).toHaveBeenCalledWith('SCI-FI');
 });
 
 test('does not call onSelect if it is not a function', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-    render(<GenreSelect genres={['Action', 'Comedy']} selectedGenre="" onSelect={null} />);
+    render(<GenreSelect genres={['ACTION', 'COMEDY']} selectedGenre="" onSelect={null} />);
 
-    const button = screen.getByRole('button', { name: 'Action' });
+    const button = screen.getByRole('button', { name: 'ACTION' });
     fireEvent.click(button);
 
     expect(consoleSpy).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
-}
-);
+});
+
+test('click on already selected genre sends null to onSelect', () => {
+    const mockOnSelect = jest.fn();
+    render(<GenreSelect genres={['COMEDY', 'DRAMA']} selectedGenre="COMEDY" onSelect={mockOnSelect} />);
+
+    const button = screen.getByRole('button', { name: 'COMEDY' });
+    fireEvent.click(button);
+
+    expect(mockOnSelect).toHaveBeenCalledWith(null);
+});

@@ -19,7 +19,7 @@ const MovieDetails = ({ movie, onClose }) => {
                     <span className={styles.rating}>{movie.rating}</span>
                 </div>
                 <div className={styles.meta}>
-                    <span className={styles.year}>{movie.year}</span>
+                    <span className={styles.releaseDate}>{movie.releaseDate}</span>
                     <span>{movie.duration}</span>
                 </div>
                 <div className={styles.detailsList}>

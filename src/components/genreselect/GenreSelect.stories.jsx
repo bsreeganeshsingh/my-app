@@ -1,14 +1,13 @@
 import React from "react";
 import GenreSelect from "./GenreSelect";
-
-const genres = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
+import { genres } from "../../utils/Constants"
 
 export default {
   title: "Components/GenreSelect",
   component: GenreSelect,
   args: {
     genres: genres,
-    selectedGenre: "Action",
+    selectedGenre: "ACTION",
     onSelect: (genre) => window.alert(`Genre selected: ${genre}`),
   },
 };
@@ -17,28 +16,28 @@ export const Default = (args) => <GenreSelect {...args} />;
 export const ComedySelected = () => (
   <GenreSelect
     genres={genres}
-    selectedGenre="Comedy"
+    selectedGenre="COMEDY"
     onSelect={(genre) => window.alert(`Genre selected: ${genre}`)}
   />
 );
 export const DramaSelected = () => (
   <GenreSelect
     genres={genres}
-    selectedGenre="Drama"
+    selectedGenre="DRAMA"
     onSelect={(genre) => window.alert(`Genre selected: ${genre}`)}
   />
 );
 export const HorrorSelected = () => (
   <GenreSelect
     genres={genres}
-    selectedGenre="Horror"
+    selectedGenre="HORROR"
     onSelect={(genre) => window.alert(`Genre selected: ${genre}`)}
   />
 );
 export const SciFiSelected = () => (
   <GenreSelect
     genres={genres}
-    selectedGenre="Sci-Fi"
+    selectedGenre="SCI-FI"
     onSelect={(genre) => window.alert(`Genre selected: ${genre}`)}
   />
 );

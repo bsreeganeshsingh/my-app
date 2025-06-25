@@ -20,19 +20,13 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
     const onEditHandler = (e) => {
         e.stopPropagation(); // Prevent click from propagating to the tile
         setShowMenu(false); // Close menu on edit
-        if (onEdit) {
-            onEdit(movie);
-        }
-        window.alert(`Edit '${movie.title}' is clicked.`);
+        onEdit?.(movie);
     }
 
     const onDeleteHandler = (e) => {
         e.stopPropagation(); // Prevent click from propagating to the tile
         setShowMenu(false); // Close menu on delete
-        if (onDelete) {
-            onDelete(movie);
-        }
-        window.alert(`Delete '${movie.title}' is clicked.`);
+        onDelete?.(movie);
     }
 
     return (
@@ -41,7 +35,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
             <div className={styles.info}>
                 <div className={styles.titleRow}>
                     <h3>{movie.title}</h3>
-                    <span className={styles.year}>{movie.year}</span>
+                    <span className={styles.releaseDate}>{movie.releaseDate.substring(0, 4)}</span>
                     <div className={styles.menuIcon} onClick={toggleMenu}>
                         ⋮
                         {showMenu && (
@@ -61,7 +55,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
 MovieTile.propTypes = {
     movie: PropTypes.shape({
         title: PropTypes.string.isRequired,
-        year: PropTypes.number.isRequired,
+        releaseDate: PropTypes.number.isRequired,
         imageUrl: PropTypes.string.isRequired,
         genres: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,

@@ -11,8 +11,8 @@ describe("MovieTile Component", () => {
     const movie = {
         title: "Inception",
         duration: "2h 28m",
-        year: 2010,
-        genres: ["Action", "Sci-Fi", "Adventure"],
+        releaseDate: "2010-03-24",
+        genres: ["ACTION", "SCI-FI", "ADVENTURE"],
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
         imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
     };
@@ -21,7 +21,7 @@ describe("MovieTile Component", () => {
         render(<MovieTile movie={movie} />);
 
         expect(screen.getByText(movie.title)).toBeInTheDocument();
-        expect(screen.getByText(movie.year)).toBeInTheDocument();
+        expect(screen.getByText(movie.releaseDate.substring(0, 4))).toBeInTheDocument();
         expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
     });
 
@@ -63,7 +63,6 @@ describe("MovieTile Component", () => {
         fireEvent.click(screen.getByText("Edit"));
 
         expect(onEdit).toHaveBeenCalledWith(movie);
-        expect(window.alert).toHaveBeenCalledWith(`Edit '${movie.title}' is clicked.`);
     });
 
     it("calls onDelete when Delete is clicked", () => {
@@ -74,7 +73,6 @@ describe("MovieTile Component", () => {
         fireEvent.click(screen.getByText("Delete"));
 
         expect(onDelete).toHaveBeenCalledWith(movie);
-        expect(window.alert).toHaveBeenCalledWith(`Delete '${movie.title}' is clicked.`);
     });
 
     it("does not crash when onClick, onEdit, or onDelete are not provided", () => {
@@ -92,23 +90,5 @@ describe("MovieTile Component", () => {
 
         expect(screen.getByText("Edit")).toBeInTheDocument();
         expect(screen.getByText("Delete")).toBeInTheDocument();
-    });
-
-    it("does not crash when Edit is clicked and onEdit is not provided", () => {
-        render(<MovieTile movie={movie} />);
-
-        fireEvent.click(screen.getByText("⋮"));
-        fireEvent.click(screen.getByText("Edit"));
-
-        expect(window.alert).toHaveBeenCalledWith(`Edit '${movie.title}' is clicked.`);
-    });
-
-    it("does not crash when Delete is clicked and onDelete is not provided", () => {
-        render(<MovieTile movie={movie} />);
-
-        fireEvent.click(screen.getByText("⋮"));
-        fireEvent.click(screen.getByText("Delete"));
-
-        expect(window.alert).toHaveBeenCalledWith(`Delete '${movie.title}' is clicked.`);
     });
 });
