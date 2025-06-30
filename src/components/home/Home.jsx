@@ -14,7 +14,7 @@ function Home() {
     const [movieList, setMovieList] = useState(movies);
     const [sortOrder, setSortOrder] = useState('title');
     const [selectedMovie, setSelectedMovie] = useState(null);
-    const [selectedGenre, setSelectedGenre] = useState('ACTION');
+    const [selectedGenre, setSelectedGenre] = useState('ALL');
     const [searchQuery, setSearchQuery] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editMovie, setEditMovie] = useState(null);
@@ -39,7 +39,8 @@ function Home() {
     }
 
     const filteredMovies = movieList.filter(movie =>
-        (!selectedGenre || (movie.genres && movie.genres.some(genre => genre.toLowerCase() === selectedGenre.toLowerCase()))) &&
+        (!selectedGenre || selectedGenre.toLocaleLowerCase() === "all" ||
+            (movie.genres?.some(genre => genre.toLowerCase() === selectedGenre.toLowerCase()))) &&
         (!searchQuery || movie.title.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
@@ -87,8 +88,13 @@ function Home() {
         <div className={styles.home}>
             {!selectedMovie && (
                 <>
-                    <button onClick={() => setDialogOpen(true)} className={styles.addBtn}>+ ADD MOVIE</button>
-                    <SearchForm initialQuery="" onSearch={(query) => handleSearch(query)} />
+                    <div className={styles.searchSection}>
+                        <div className={styles.header}>
+                            <div className={styles.logo}>netflix<span>roulette</span></div>
+                            <button onClick={() => setDialogOpen(true)} className={styles.addBtn}>+ ADD MOVIE</button>
+                        </div>
+                        <SearchForm initialQuery="" onSearch={(query) => handleSearch(query)} />
+                    </div>
                     <div className={styles.controlsRow}>
                         <GenreSelect
                             genres={genres}

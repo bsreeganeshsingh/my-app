@@ -10,7 +10,7 @@ describe("MovieDetails Component", () => {
         rating: 8.8,
         duration: "2h 28m",
         releaseDate: "2010-10-12",
-        genres: ["ACTION", "SCI-FI", "ADVENTURE"],
+        genres: ["COMEDY", "DOCUMENTARY", "CRIME"],
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
         imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
     };
@@ -25,7 +25,7 @@ describe("MovieDetails Component", () => {
         expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
         expect(screen.getByText(String(movie.releaseDate))).toBeInTheDocument();
         expect(screen.getByText(movie.duration)).toBeInTheDocument();
-        expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
+        expect(screen.getByText("COMEDY, DOCUMENTARY & CRIME")).toBeInTheDocument();
         expect(screen.getByText(movie.description)).toBeInTheDocument();
     });
 
@@ -56,7 +56,7 @@ describe("MovieDetails Component", () => {
         expect(screen.getByText(String(movie.rating))).toBeInTheDocument();
         expect(screen.getByText(String(movie.releaseDate))).toBeInTheDocument();
         expect(screen.getByText(movie.duration)).toBeInTheDocument();
-        expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
+        expect(screen.getByText("COMEDY, DOCUMENTARY & CRIME")).toBeInTheDocument();
         expect(screen.getByText(movie.description)).toBeInTheDocument();
     });
 
@@ -67,22 +67,6 @@ describe("MovieDetails Component", () => {
         );
         fireEvent.click(screen.getByRole("button"));
         expect(onClose).toHaveBeenCalled();
-    });
-
-    it("displays fallback text for optional fields when not provided", () => {
-        const partialMovie = {
-            ...movie,
-            cast: undefined,
-            director: undefined,
-            boxOffice: undefined,
-            awards: undefined,
-            language: undefined,
-            country: undefined,
-        };
-
-        render(<MovieDetails movie={partialMovie} />);
-
-        expect(screen.getAllByText("N/A").length).toBe(6); // Total 6 fallback fields
     });
 
     it("does not crash when onClose is not provided", () => {

@@ -119,7 +119,7 @@ describe("Home Component", () => {
     it("renders GenreSelect with correct options and default", () => {
         renderHome();
         const genreSelect = screen.getByTestId("genre-select");
-        expect(genreSelect.value).toBe("ACTION");
+        expect(genreSelect.value).toBe("ALL");
         mockGenres.forEach(genre => {
             expect(screen.getByText(genre)).toBeInTheDocument();
         });
@@ -149,15 +149,15 @@ describe("Home Component", () => {
     it("sorts movies by year", () => {
         renderHome();
         const sortControl = screen.getByTestId("sort-control");
-        fireEvent.change(sortControl, { target: { value: "year" } });
-        expect(sortControl.value).toBe("year");
+        fireEvent.change(sortControl, { target: { value: "releaseDate" } });
+        expect(sortControl.value).toBe("releaseDate");
     });
 
     it("updates selectedGenre state when GenreSelect changes", () => {
         renderHome();
         const genreSelect = screen.getByTestId("genre-select");
-        fireEvent.change(genreSelect, { target: { value: "DRAMA" } });
-        expect(genreSelect.value).toBe("DRAMA");
+        fireEvent.change(genreSelect, { target: { value: "CRIME" } });
+        expect(genreSelect.value).toBe("CRIME");
     });
 
     it("renders correct number of MovieTile components", () => {
@@ -187,7 +187,7 @@ describe("Home Component", () => {
         mockGenres.forEach(genre => {
             expect(screen.getByText(genre)).toBeInTheDocument();
         });
-        expect(genreSelect.children.length).toBe(12);
+        expect(genreSelect.children.length).toBe(5);
     });
 
     it("renders all sort options in SortControl", () => {

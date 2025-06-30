@@ -19,8 +19,6 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
     });
     const [isGenreDropdownOpen, setGenreDropdownOpen] = useState(false);
 
-    const toggleGenreDropdown = () => setGenreDropdownOpen(!isGenreDropdownOpen);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((f) => ({ ...f, [name]: value }));
@@ -85,19 +83,20 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
                 <label>GENRES</label>
                 <div className={styles.dropdownContainer}>
                     <div className={styles.dropdownHeader}
-                        aria-labelledby="genre-label"
+                        data-testid="genre-dropdown-header"
                         onClick={(e) => {
                             e.stopPropagation();
-                            toggleGenreDropdown();
+                            setGenreDropdownOpen(prev => !prev);
                         }}
                     >
-                        {form.genres.length > 0 ? form.genres.join(', ') : 'SELECT GENRES'}
+                        {form.genres.length > 0 ? form.genres.join(', ') : 'Select Genre'}
                     </div>
                     {isGenreDropdownOpen && (
                         <div className={styles.dropdownList}>
-                            {genreOptions.map((genre) => (
+                            {genreOptions.filter((genre) => genre !== 'ALL').map((genre) => (
                                 <label key={genre} className={styles.dropdownItem}>
                                     <input type="checkbox"
+                                        aria-label={`genre-${genre}`}
                                         checked={form.genres.includes(genre)}
                                         onChange={(e) => {
                                             e.stopPropagation();

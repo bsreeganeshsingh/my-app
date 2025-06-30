@@ -5,6 +5,6 @@ import App from './App';
 
 test('renders React Components Example link', () => {
   render(<App />);
-  const inputElement = screen.getByPlaceholderText('Enter search query');
+  const inputElement = screen.getByPlaceholderText('What do you want to watch?');
   expect(inputElement).toBeInTheDocument();
 });

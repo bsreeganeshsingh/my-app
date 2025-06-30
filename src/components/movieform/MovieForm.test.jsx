@@ -16,7 +16,7 @@ describe('MovieForm', () => {
         rating: '8.8',
         description: 'A mind-bending thriller',
         imageUrl: 'http://example.com/image.jpg',
-        genres: ['SCI-FI', 'THRILLER'],
+        genres: ['COMEDY', 'CRIME'],
     };
 
     const fillForm = (getByLabelText, getByText) => {
@@ -26,10 +26,10 @@ describe('MovieForm', () => {
         fireEvent.change(getByLabelText(/RATING/i), { target: { value: '9.0' } });
         fireEvent.change(getByLabelText(/DESCRIPTION/i), { target: { value: 'Neo discovers the truth' } });
         // Click to open genres dropdown
-        const dropdownHeader = getByText(/SELECT GENRES/i);
+        const dropdownHeader = getByText(/Select Genre/i);
         fireEvent.click(dropdownHeader);
-        fireEvent.click(getByText('ACTION').previousSibling);
-        fireEvent.click(getByText('ADVENTURE').previousSibling);
+        fireEvent.click(getByText('COMEDY').previousSibling);
+        fireEvent.click(getByText('HORROR').previousSibling);
         fireEvent.change(getByLabelText(/IMAGE URL/i), { target: { value: 'http://matrix.com/image.png' } });
     };
 
@@ -40,7 +40,7 @@ describe('MovieForm', () => {
     it('renders with default empty values when no initialData is provided', () => {
         const { getByLabelText, getByText } = render(<MovieForm {...defaultProps} />);
         expect(getByLabelText(/TITLE/i).value).toBe('');
-        expect(getByText(/SELECT GENRES/i)).toBeInTheDocument();
+        expect(getByText(/Select Genre/i)).toBeInTheDocument();
     });
 
     it('handles input changes', () => {
@@ -61,7 +61,7 @@ describe('MovieForm', () => {
             duration: '2h 16m',
             rating: 9.0,
             description: 'Neo discovers the truth',
-            genres: ['ACTION', 'ADVENTURE'],
+            genres: ['COMEDY', 'HORROR'],
             imageUrl: 'http://matrix.com/image.png',
         });
     });
@@ -100,7 +100,7 @@ describe('MovieForm', () => {
         const { getByText } = render(
             <MovieForm {...defaultProps} initialData={emptyGenresData} />
         );
-        expect(getByText(/SELECT GENRES/i)).toBeInTheDocument();
+        expect(getByText(/Select Genre/i)).toBeInTheDocument();
     });
 
     it('resets the form without crashing when onReset is undefined', () => {
@@ -112,5 +112,25 @@ describe('MovieForm', () => {
         fireEvent.click(getByText(/RESET/i));
 
         expect(getByLabelText(/TITLE/i).value).toBe('');
+    });
+
+    it('removes a genre when it is unchecked', () => {
+        const { getByLabelText, getByTestId } = render(
+            <MovieForm {...defaultProps} initialData={{ ...initialData, genres: ['COMEDY'] }} />
+        );
+
+        // Open dropdown
+        const dropdownHeader = getByTestId('genre-dropdown-header');
+        fireEvent.click(dropdownHeader);
+
+        // Genre COMEDY should be checked, uncheck it
+        const comedyCheckbox = getByLabelText('genre-COMEDY');
+        expect(comedyCheckbox.checked).toBe(true);
+
+        fireEvent.click(comedyCheckbox);
+        expect(comedyCheckbox.checked).toBe(false);
+
+        // Check if the dropdown header reflects the removal
+        expect(getByTestId('genre-dropdown-header')).toHaveTextContent('Select Genre');
     });
 });
