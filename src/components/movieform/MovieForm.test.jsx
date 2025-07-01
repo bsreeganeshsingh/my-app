@@ -11,11 +11,11 @@ describe('MovieForm', () => {
 
     const initialData = {
         title: 'Inception',
-        releaseDate: '2010-12-24',
+        release_date: '2010-12-24',
         duration: '2h 28m',
-        rating: '8.8',
+        vote_average: 8.8,
         description: 'A mind-bending thriller',
-        imageUrl: 'http://example.com/image.jpg',
+        poster_path: 'http://example.com/image.jpg',
         genres: ['COMEDY', 'CRIME'],
     };
 
@@ -29,7 +29,7 @@ describe('MovieForm', () => {
         const dropdownHeader = getByText(/Select Genre/i);
         fireEvent.click(dropdownHeader);
         fireEvent.click(getByText('COMEDY').previousSibling);
-        fireEvent.click(getByText('HORROR').previousSibling);
+        fireEvent.click(getByText('CRIME').previousSibling);
         fireEvent.change(getByLabelText(/IMAGE URL/i), { target: { value: 'http://matrix.com/image.png' } });
     };
 
@@ -57,12 +57,14 @@ describe('MovieForm', () => {
 
         expect(handleSubmit).toHaveBeenCalledWith({
             title: 'The Matrix',
-            releaseDate: '2001-03-31',
-            duration: '2h 16m',
-            rating: 9.0,
-            description: 'Neo discovers the truth',
-            genres: ['COMEDY', 'HORROR'],
-            imageUrl: 'http://matrix.com/image.png',
+            release_date: '2001-03-31',
+            runtime: NaN,
+            budget: NaN,
+            tagline: '',
+            vote_average: 9.0,
+            overview: 'Neo discovers the truth',
+            genres: ['COMEDY', 'CRIME'],
+            poster_path: 'http://matrix.com/image.png',
         });
     });
 

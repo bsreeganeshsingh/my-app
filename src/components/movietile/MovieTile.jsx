@@ -30,7 +30,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
     return (
         <div data-testid="movie-tile" className={styles.movieTile} onClick={onClickHandler}>
             <div className={styles.imageContainer}>
-                <img src={movie.imageUrl} alt={movie.title} className={styles.poster} />
+                <img src={movie.poster_path} alt={movie.title} className={styles.poster} />
                 <div className={styles.menuIcon} onClick={toggleMenu}>
                     ⋮
                     {showMenu && (
@@ -44,7 +44,7 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
             <div className={styles.info}>
                 <div className={styles.titleRow}>
                     <h3 className={styles.title}>{movie.title}</h3>
-                    <span className={styles.releaseDate}>{movie.releaseDate.substring(0, 4)}</span>
+                    <span className={styles.release_date}>{movie.release_date.substring(0, 4)}</span>
                 </div>
                 <p className={styles.genres}>{movie.genres.join(', ')}</p>
             </div>
@@ -55,8 +55,8 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }) => {
 MovieTile.propTypes = {
     movie: PropTypes.shape({
         title: PropTypes.string.isRequired,
-        releaseDate: PropTypes.string.isRequired,
-        imageUrl: PropTypes.string.isRequired,
+        release_date: PropTypes.string.isRequired,
+        poster_path: PropTypes.string.isRequired,
         genres: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,
     onClick: PropTypes.func,

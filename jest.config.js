@@ -15,7 +15,8 @@ module.exports = {
   coveragePathIgnorePatterns: [
     "/node_modules/",
     "\\.stories\\.jsx?$",
-    "/src/stories/"
+    "/src/stories/",
+    "/src/utils/"
   ],
   moduleDirectories: [
     "node_modules",

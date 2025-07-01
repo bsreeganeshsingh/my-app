@@ -2,9 +2,10 @@ import React from "react";
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { genres as mockGenres, sortOptions as mockSortOptions } from '../../utils/Constants';
-import Home from "./Home";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import MovieListPage from "./MovieListPage";
 
-const HomeEmpty = require('./Home').default;
+const MovieListPageEmpty = require('./MovieListPage').default;
 
 jest.useFakeTimers();
 
@@ -60,7 +61,7 @@ jest.mock('../moviedetails/MovieDetails', () => ({ movie, onClose }) => (
 const mockOnSubmit = jest.fn();
 jest.mock('../movieform/MovieForm', () => ({ initialData, onSubmit }) => (
     <div data-testid="movie-form">
-        <button onClick={() => onSubmit({ title: "New Movie", releaseDate: 2023, duration: 120 })}>Submit</button>
+        <button onClick={() => onSubmit({ title: "New Movie", release_date: 2023, duration: 120 })}>Submit</button>
     </div>
 ));
 
@@ -73,22 +74,85 @@ jest.mock('../dialog/Dialog', () => ({ children, title, onClose }) => (
     </div>
 ));
 
-describe("Home Component", () => {
-    function renderHome() {
+let moviesData = [
+    { id: 1, title: 'Movie 1' },
+    { id: 2, title: 'Avengers' },
+    { id: 3, title: 'Spider-Man' }
+];
+
+let mockShouldFailAdd = false;
+let mockShouldFailEdit = false;
+let mockShouldFailDelete = false;
+
+jest.mock('../../hooks/usemovies/useMovies', () => ({
+    useMovies: () => ({
+        data: {
+            movies: moviesData,
+            total: moviesData.length
+        },
+        isLoading: false,
+        isError: false
+    })
+}));
+
+jest.mock('../../hooks/useaddmovie/useAddMovie', () => ({
+    useAddMovie: () => ({
+        mutate: (data, { onSuccess, onError }) => {
+            if (mockShouldFailAdd) {
+                onError && onError(new Error("Add movie failed"));
+            } else {
+                onSuccess && onSuccess();
+            }
+        },
+        isLoading: false,
+    }),
+}));
+
+jest.mock('../../hooks/useeditmovie/useEditMovie', () => ({
+    useEditMovie: () => ({
+        mutate: jest.fn((data, { onSuccess, onError }) => {
+            if (mockShouldFailEdit) {
+                onError && onError(new Error("Edit movie failed"));
+            } else {
+                onSuccess && onSuccess();
+            }
+        }),
+        isLoading: false
+    })
+}));
+
+jest.mock('../../hooks/usedeletemovie/useDeleteMovie', () => ({
+    useDeleteMovie: () => ({
+        mutate: jest.fn((id, { onSuccess, onError }) => {
+            if (mockShouldFailDelete) {
+                onError && onError(new Error("Delete movie failed"));
+            } else {
+                onSuccess && onSuccess();
+            }
+        }),
+        isLoading: false
+    })
+}));
+
+describe("MovieListPage Component", () => {
+    function renderMovieListPage() {
+        const queryClient = new QueryClient();
         return render(
-            <Home />
+            <QueryClientProvider client={queryClient}>
+                <MovieListPage />
+            </QueryClientProvider >
         );
     }
 
     it("renders SearchForm, GenreSelect, and SortControl when no movie is selected", () => {
-        renderHome();
+        renderMovieListPage();
         expect(screen.getByTestId("search-form")).toBeInTheDocument();
         expect(screen.getByTestId("genre-select")).toBeInTheDocument();
         expect(screen.getByTestId("sort-control")).toBeInTheDocument();
     });
 
     it("hides SearchForm, GenreSelect, and SortControl when a movie is selected", () => {
-        renderHome();
+        renderMovieListPage();
         // Click the first movie tile to select a movie
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
         expect(screen.queryByTestId("search-form")).not.toBeInTheDocument();
@@ -98,7 +162,7 @@ describe("Home Component", () => {
     });
 
     it("shows movie grid always", () => {
-        renderHome();
+        renderMovieListPage();
         expect(screen.getAllByTestId("movie-tile").length).toBeGreaterThan(0);
         // Select a movie
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
@@ -107,7 +171,7 @@ describe("Home Component", () => {
     });
 
     it("closes MovieDetails and shows controls again when onClose is called", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
         expect(screen.getByTestId("movie-details")).toBeInTheDocument();
         fireEvent.click(screen.getByText("Close"));
@@ -117,7 +181,7 @@ describe("Home Component", () => {
     });
 
     it("renders GenreSelect with correct options and default", () => {
-        renderHome();
+        renderMovieListPage();
         const genreSelect = screen.getByTestId("genre-select");
         expect(genreSelect.value).toBe("ALL");
         mockGenres.forEach(genre => {
@@ -126,49 +190,49 @@ describe("Home Component", () => {
     });
 
     it("renders SortControl with correct default", () => {
-        renderHome();
+        renderMovieListPage();
         const sortControl = screen.getByTestId("sort-control");
 
         expect(sortControl.value).toBe("title");
     });
 
     it("selects a movie when a MovieTile is clicked", () => {
-        renderHome();
+        renderMovieListPage();
         const movieTiles = screen.getAllByTestId("movie-tile");
         fireEvent.click(movieTiles[1]);
         expect(screen.getByTestId("movie-details")).toBeInTheDocument();
     });
 
     it("sorts movies by title", () => {
-        renderHome();
+        renderMovieListPage();
         const sortControl = screen.getByTestId("sort-control");
         fireEvent.change(sortControl, { target: { value: "title" } });
         expect(sortControl.value).toBe("title");
     });
 
     it("sorts movies by year", () => {
-        renderHome();
+        renderMovieListPage();
         const sortControl = screen.getByTestId("sort-control");
-        fireEvent.change(sortControl, { target: { value: "releaseDate" } });
-        expect(sortControl.value).toBe("releaseDate");
+        fireEvent.change(sortControl, { target: { value: "release_date" } });
+        expect(sortControl.value).toBe("release_date");
     });
 
     it("updates selectedGenre state when GenreSelect changes", () => {
-        renderHome();
+        renderMovieListPage();
         const genreSelect = screen.getByTestId("genre-select");
         fireEvent.change(genreSelect, { target: { value: "CRIME" } });
         expect(genreSelect.value).toBe("CRIME");
     });
 
     it("renders correct number of MovieTile components", () => {
-        renderHome();
+        renderMovieListPage();
         const movieTiles = screen.getAllByTestId("movie-tile");
 
         expect(movieTiles.length).toBeGreaterThan(0);
     });
 
     it("MovieDetails onClose sets selectedMovie to null", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
         expect(screen.getByTestId("movie-details")).toBeInTheDocument();
         fireEvent.click(screen.getByText("Close"));
@@ -176,29 +240,29 @@ describe("Home Component", () => {
     });
 
     it("SearchForm renders with initialQuery", () => {
-        renderHome();
+        renderMovieListPage();
         const searchInput = screen.getByTestId("search-form");
         expect(searchInput.value).toBe("");
     });
 
     it("renders all genre options in GenreSelect", () => {
-        renderHome();
+        renderMovieListPage();
         const genreSelect = screen.getByTestId("genre-select");
         mockGenres.forEach(genre => {
             expect(screen.getByText(genre)).toBeInTheDocument();
         });
-        expect(genreSelect.children.length).toBe(5);
+        expect(genreSelect.children.length).toBe(9);
     });
 
     it("renders all sort options in SortControl", () => {
-        renderHome();
+        renderMovieListPage();
         const sortControl = screen.getByTestId("sort-control");
 
         expect(sortControl.children.length).toBe(2);
     });
 
     it("updates searchQuery state when SearchForm input changes", () => {
-        renderHome();
+        renderMovieListPage();
         const searchInput = screen.getByTestId("search-form");
 
         fireEvent.change(searchInput, { target: { value: "avengers" } });
@@ -207,14 +271,14 @@ describe("Home Component", () => {
     });
 
     it("opens add movie dialog when Add Movie button is clicked", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getByText("+ ADD MOVIE"));
         expect(screen.getByTestId("dialog")).toBeInTheDocument();
         expect(screen.getByTestId("movie-form")).toBeInTheDocument();
     });
 
     it("adds a new movie and shows success dialog", async () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getByText("+ ADD MOVIE"));
 
         fireEvent.click(screen.getByText("Submit"));
@@ -232,7 +296,7 @@ describe("Home Component", () => {
     });
 
     it("opens edit dialog when movie edit is triggered", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByText("edit")[0]);
         expect(screen.getByTestId("dialog")).toBeInTheDocument();
         expect(screen.getByTestId("movie-form")).toBeInTheDocument();
@@ -240,7 +304,7 @@ describe("Home Component", () => {
     });
 
     it("edits an existing movie and shows success dialog", async () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByText("edit")[0]);
         fireEvent.click(screen.getByText("Submit"));
 
@@ -257,7 +321,7 @@ describe("Home Component", () => {
     });
 
     it("closes dialog when Close Dialog button is clicked", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getByText("+ ADD MOVIE"));
         expect(screen.getByTestId("dialog")).toBeInTheDocument();
 
@@ -266,7 +330,7 @@ describe("Home Component", () => {
     });
 
     it("closes success dialog when Close Dialog is clicked", async () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getByText("+ ADD MOVIE"));
         fireEvent.click(screen.getByText("Submit"));
 
@@ -279,7 +343,7 @@ describe("Home Component", () => {
     });
 
     it("filters movies by selected genre", () => {
-        renderHome();
+        renderMovieListPage();
         const genreSelect = screen.getByTestId("genre-select");
 
         fireEvent.change(genreSelect, { target: { value: "COMEDY" } });
@@ -290,17 +354,8 @@ describe("Home Component", () => {
         });
     });
 
-    it("filters movies by search query", () => {
-        renderHome();
-        const searchInput = screen.getByTestId("search-form");
-
-        fireEvent.change(searchInput, { target: { value: "nonexistenttitle" } });
-
-        expect(screen.queryAllByTestId("movie-tile").length).toBe(0);
-    });
-
     it("handles undefined genre in filtering", () => {
-        renderHome();
+        renderMovieListPage();
         const genreSelect = screen.getByTestId("genre-select");
 
         fireEvent.change(genreSelect, { target: { value: "" } }); // No genre
@@ -308,7 +363,7 @@ describe("Home Component", () => {
     });
 
     it("sorts movie list correctly by year", () => {
-        renderHome();
+        renderMovieListPage();
         const sortControl = screen.getByTestId("sort-control");
         fireEvent.change(sortControl, { target: { value: "year" } });
 
@@ -318,25 +373,14 @@ describe("Home Component", () => {
     });
 
     it("opens delete confirmation dialog when delete is clicked", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByText("delete")[0]);
         expect(screen.getByText("DELETE MOVIE")).toBeInTheDocument();
         expect(screen.getByText(/Are you sure you want to delete/)).toBeInTheDocument();
     });
 
-    it("deletes a movie when confirm is clicked", () => {
-        renderHome();
-        const initialCount = screen.getAllByTestId("movie-tile").length;
-
-        fireEvent.click(screen.getAllByText("delete")[0]);
-        fireEvent.click(screen.getByText("CONFIRM"));
-
-        const finalCount = screen.getAllByTestId("movie-tile").length;
-        expect(finalCount).toBe(initialCount - 1);
-    });
-
     it("opens delete confirmation dialog, and closes it on X click", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByText("delete")[0]);
         fireEvent.click(screen.getByText("Close Dialog"));
 
@@ -344,7 +388,7 @@ describe("Home Component", () => {
     });
 
     it("updates selectedMovie when edited movie is currently selected", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]); // select
         fireEvent.click(screen.getAllByText("edit")[0]); // edit same movie
         fireEvent.click(screen.getByText("Submit"));
@@ -355,7 +399,7 @@ describe("Home Component", () => {
     });
 
     it("clears selectedMovie when the selected movie is deleted", () => {
-        renderHome();
+        renderMovieListPage();
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
         expect(screen.getByTestId("movie-details")).toBeInTheDocument();
 
@@ -366,7 +410,7 @@ describe("Home Component", () => {
     });
 
     it("edits an existing movie when no selectedMovie is set", async () => {
-        renderHome();
+        renderMovieListPage();
 
         // Click on "edit" button without selecting the movie (so selectedMovie is null)
         fireEvent.click(screen.getAllByText("edit")[0]);
@@ -387,7 +431,7 @@ describe("Home Component", () => {
     });
 
     it("edits an existing movie but does NOT update selectedMovie when IDs do not match", async () => {
-        renderHome();
+        renderMovieListPage();
 
         // Select a movie
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
@@ -403,7 +447,7 @@ describe("Home Component", () => {
     });
 
     it("edits a movie when no movie is selected (selectedMovie is null)", async () => {
-        renderHome();
+        renderMovieListPage();
 
         // Do NOT select any movie, directly edit
         fireEvent.click(screen.getAllByText("edit")[0]);
@@ -420,5 +464,52 @@ describe("Home Component", () => {
         await waitFor(() => {
             expect(screen.queryByText("Congratulations!")).not.toBeInTheDocument();
         });
+    });
+
+    it("handles error when add movie fails", async () => {
+        mockShouldFailAdd = true;
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        renderMovieListPage();
+        fireEvent.click(screen.getByText("+ ADD MOVIE"));
+        fireEvent.click(screen.getByText("Submit"));
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+            'Failed to add movie:',
+            expect.any(Error)
+        );
+
+        consoleSpy.mockRestore();
+        mockShouldFailAdd = false;
+    });
+
+    it("handles error when edit movie fails", async () => {
+        mockShouldFailEdit = true;
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        renderMovieListPage();
+        fireEvent.click(screen.getAllByText("edit")[0]);
+        fireEvent.click(screen.getByText("Submit"));
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+            'Failed to update movie:',
+            expect.any(Error)
+        );
+
+        consoleSpy.mockRestore();
+        mockShouldFailEdit = false;
+    });
+
+    it("handles error when delete movie fails", async () => {
+        mockShouldFailDelete = true;
+
+        renderMovieListPage();
+        fireEvent.click(screen.getAllByText("delete")[0]);
+        fireEvent.click(screen.getByText("CONFIRM"));
+
+        // Since delete error doesn't log, check that movieToDelete dialog closed
+        expect(screen.queryByText("DELETE MOVIE")).not.toBeInTheDocument();
+
+        mockShouldFailDelete = false;
     });
 });

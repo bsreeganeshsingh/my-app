@@ -6,31 +6,38 @@ import styles from './MovieForm.module.scss';
 const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
     const genresAsArray = Array.isArray(initialData?.genres)
         ? initialData.genres
-        : (initialData?.genres || '').split(', ').map((g) => g.trim()).filter(Boolean);
+        : (initialData?.genres || '')
+            .split(', ')
+            .map((g) => g.trim())
+            .filter(Boolean);
+
     const [form, setForm] = useState({
         title: '',
-        releaseDate: '',
-        duration: '',
-        rating: '',
-        description: '',
-        imageUrl: '',
+        tagline: '',
+        release_date: '',
+        runtime: '',
+        vote_average: '',
+        budget: '',
+        overview: '',
+        poster_path: '',
         ...initialData,
         genres: genresAsArray,
     });
+
     const [isGenreDropdownOpen, setGenreDropdownOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((f) => ({ ...f, [name]: value }));
+        setForm((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleGenreChange = (genre) => {
-        setForm((f) => {
-            const hasGenre = f.genres.includes(genre);
+        setForm((prev) => {
+            const hasGenre = prev.genres.includes(genre);
             const genres = hasGenre
-                ? f.genres.filter((g) => g !== genre)
-                : [...f.genres, genre];
-            return { ...f, genres };
+                ? prev.genres.filter((g) => g !== genre)
+                : [...prev.genres, genre];
+            return { ...prev, genres };
         });
     };
 
@@ -38,7 +45,9 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
         e.preventDefault();
         const prepared = {
             ...form,
-            rating: parseFloat(form.rating),
+            vote_average: parseFloat(form.vote_average),
+            runtime: parseInt(form.runtime, 10),
+            budget: parseInt(form.budget, 10),
             genres: form.genres,
         };
         onSubmit(prepared);
@@ -47,11 +56,13 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
     const handleReset = () => {
         setForm({
             title: '',
-            releaseDate: '',
-            duration: '',
-            rating: '',
-            description: '',
-            imageUrl: '',
+            tagline: '',
+            release_date: '',
+            runtime: '',
+            vote_average: '',
+            budget: '',
+            overview: '',
+            poster_path: '',
             ...initialData,
             genres: genresAsArray,
         });
@@ -70,19 +81,34 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
             <label>
                 RELEASE DATE
                 <input
-                    name="releaseDate"
+                    name="release_date"
                     type="date"
-                    value={form.releaseDate}
+                    value={form.release_date}
                     onChange={handleChange}
                     required
                 />
             </label>
-            <label> IMAGE URL <input name="imageUrl" value={form.imageUrl} onChange={handleChange} required /></label>
-            <label> RATING <input name="rating" value={form.rating} onChange={handleChange} required /></label>
+            <label>
+                TAGLINE
+                <input name="tagline" value={form.tagline} onChange={handleChange} required />
+            </label>
+            <label>
+                RATING
+                <input name="vote_average" type="number" step="0.1" value={form.vote_average} onChange={handleChange} required />
+            </label>
+            <label>
+                IMAGE URL
+                <input name="poster_path" value={form.poster_path} onChange={handleChange} required />
+            </label>
+            <label>
+                DURATION
+                <input name="runtime" type="number" value={form.runtime} onChange={handleChange} required />
+            </label>
             <div className={styles.genreField}>
                 <label>GENRES</label>
                 <div className={styles.dropdownContainer}>
-                    <div className={styles.dropdownHeader}
+                    <div
+                        className={styles.dropdownHeader}
                         data-testid="genre-dropdown-header"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -95,9 +121,10 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
                         <div className={styles.dropdownList}>
                             {genreOptions.filter((genre) => genre !== 'ALL').map((genre) => (
                                 <label key={genre} className={styles.dropdownItem}>
-                                    <input type="checkbox"
+                                    <input
+                                        type="checkbox"
                                         aria-label={`genre-${genre}`}
-                                        checked={form.genres.includes(genre)}
+                                        checked={form.genres.some(g => g.toLowerCase() === genre.toLowerCase())}
                                         onChange={(e) => {
                                             e.stopPropagation();
                                             handleGenreChange(genre);
@@ -110,8 +137,14 @@ const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
                     )}
                 </div>
             </div>
-            <label> DURATION <input name="duration" value={form.duration} onChange={handleChange} required /></label>
-            <label> DESCRIPTION <textarea name="description" value={form.description} onChange={handleChange} required /></label>
+            <label>
+                BUDGET
+                <input name="budget" type="number" value={form.budget} onChange={handleChange} required />
+            </label>
+            <label>
+                DESCRIPTION
+                <textarea name="overview" value={form.overview} onChange={handleChange} required />
+            </label>
             <div className={styles.buttonGroup}>
                 <button type="reset">RESET</button>
                 <button type="submit">SUBMIT</button>

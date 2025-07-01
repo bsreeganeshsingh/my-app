@@ -23,18 +23,18 @@ const MovieDetails = ({ movie, onClose }) => {
                 </button>
             </div>
             <div className={styles.content}>
-                <img src={movie.imageUrl} alt={movie.title} className={styles.poster} />
+                <img src={movie.poster_path} alt={movie.title} className={styles.poster} />
                 <div className={styles.info}>
                     <div className={styles.titleRow}>
                         <h1>{movie.title}</h1>
-                        <div className={styles.rating}>{movie.rating}</div>
+                        <div className={styles.voteAverage}>{movie.vote_average}</div>
                     </div>
                     <div className={styles.genres}> {formattedGenres} </div>
                     <div className={styles.meta}>
-                        <span className={styles.releaseDate}>{movie.releaseDate}</span>
+                        <span className={styles.release_date}>{movie.release_date}</span>
                         <span>{movie.duration}</span>
                     </div>
-                    <div className={styles.description}> {movie.description} </div>
+                    <div className={styles.description}> {movie.overview} </div>
                 </div>
             </div>
         </div>

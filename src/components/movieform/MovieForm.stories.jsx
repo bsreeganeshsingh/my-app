@@ -17,12 +17,12 @@ export const EditMovieForm = {
   args: {
     initialData: {
       title: 'OG',
-      releaseDate: '2025',
+      release_date: '2025',
       duration: '2h 48m',
-      rating: '9.9',
+      vote_average: '9.9',
       description: 'Original Gangstar',
       genres: ['ACTION', 'DRAMA', 'ADVENTURE'],
-      imageUrl: 'https://cdn.123telugu.com/content/wp-content/uploads/2024/02/OG.jpg',
+      poster_path: 'https://cdn.123telugu.com/content/wp-content/uploads/2024/02/OG.jpg',
     },
     onSubmit: () => { }
   }
@@ -32,12 +32,12 @@ export const MissingRequiredFields = {
   args: {
     initialData: {
       title: '',
-      releaseDate: '',
+      release_date: '',
       duration: '',
       rating: '',
       description: '',
       genres: '',
-      imageUrl: '',
+      poster_path: '',
     },
     onSubmit: (data) => console.log('Missing fields submitted:', data),
   }

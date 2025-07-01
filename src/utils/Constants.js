@@ -1,5 +1,5 @@
-export const genres = ['ALL', 'DOCUMENTARY', 'COMEDY', 'HORROR', 'CRIME'];
+export const genres = ['ALL', 'ACTION', 'ADVENTURE', 'DOCUMENTARY', 'COMEDY', 'FANTASY', 'CRIME', 'SCIENCE-FICTION', 'ROMANCE'];
 export const sortOptions = [
     { label: "TITLE", value: "title" },
-    { label: "RELEASE DATE", value: "releaseDate" }
+    { label: "RELEASE DATE", value: "release_date" }
 ];
