@@ -1,23 +1,22 @@
 import React from 'react';
-import './GenreSelect.css';
+import styles from './GenreSelect.module.scss';
 
 function GenreSelect({ genres, selectedGenre, onSelect }) {
-
   const handleSelect = (genre) => {
-    if (typeof onSelect === 'function') {
-      onSelect(genre === selectedGenre ? null : genre);
-    }
+    onSelect?.(genre);
   };
 
   return (
-    <div className="genreSelectRow">
+    <div className={styles.genreSelectRow}>
       {genres.map((genre) => (
         <button
           key={genre}
-          className={`button ${genre === selectedGenre ? 'selected' : ''}`}
+          className={`${styles.button} ${genre === selectedGenre ? styles.selected : ''
+            }`}
           onClick={() => handleSelect(genre)}
         >
           {genre}
+          {genre === selectedGenre && <div className={styles.underline} />}
         </button>
       ))}
     </div>

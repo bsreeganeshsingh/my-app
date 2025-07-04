@@ -1,94 +1,99 @@
-.flex {
-    display: flex;
-}
-
-.space-between {
-    justify-content: space-between;
-}
-
-.align-center {
-    align-items: center;
-}
-
-.text-bold {
-    font-weight: bold;
-}
-
 .movieTile {
-    position: relative;
-    width: 200px;
-    margin: 10px;
+    width: 320px;
     cursor: pointer;
-    background-color: #1c1c1c;
-    color: #fff;
     border-radius: 8px;
+    background-color: #232323;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    color: #fff;
     transition: transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 
     &:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
 
-    .poster {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-    }
+    .imageContainer {
+        position: relative;
 
-    .info {
-        padding: 10px;
+        .poster {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
 
-        .titleRow {
-            @extend .flex;
-            @extend .space-between;
-            margin-bottom: 6px;
+        .menuIcon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(35, 35, 35, 0.7);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 2;
 
-            h3 {
-                font-size: 1.1rem;
-                margin: 0;
+            &:hover {
+                background: rgba(80, 80, 80, 0.9);
             }
 
-            .releaseDate {
-                font-size: 0.9rem;
-                color: #ccc;
-            }
+            .menu {
+                position: absolute;
+                top: 28px;
+                right: 0;
+                background: #2e2e2e;
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+                padding: 6px 0;
+                list-style: none;
+                min-width: 100px;
+                z-index: 3;
 
-            .menuIcon {
-                position: relative;
-                font-size: 1.2rem;
-                cursor: pointer;
-                width: 2px;
-                display: flex;
-                justify-content: center;
+                li {
+                    padding: 6px 12px;
+                    font-size: 0.9rem;
+                    color: #fff;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
 
-                ul.menu {
-                    position: absolute;
-                    top: 0;
-                    right: 10px;
-                    background: #333;
-                    padding: 5px 0;
-                    list-style: none;
-                    border-radius: 4px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-
-                    li {
-                        padding: 3px 6px;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 0.8rem;
-
-                        &:hover {
-                            background: #d33c49;
-                        }
+                    &:hover {
+                        background-color: #d33c49;
                     }
                 }
             }
         }
+    }
+
+    .info {
+        padding: 12px;
+
+        .titleRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+
+            .title {
+                font-size: 1rem;
+                font-weight: 500;
+                margin: 0;
+            }
+
+            .release_date {
+                font-size: 0.85rem;
+                color: #aaa;
+            }
+        }
 
         .genres {
-            font-size: 0.9rem;
-            color: #aaa;
+            font-size: 0.85rem;
+            color: #bbb;
+            margin: 0;
         }
     }
 }

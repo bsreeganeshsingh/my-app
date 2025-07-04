@@ -11,17 +11,17 @@ describe("MovieTile Component", () => {
     const movie = {
         title: "Inception",
         duration: "2h 28m",
-        releaseDate: "2010-03-24",
+        release_date: "2010-03-24",
         genres: ["ACTION", "SCI-FI", "ADVENTURE"],
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
-        imageUrl: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
+        poster_path: "https://filmartgallery.com/cdn/shop/files/Inception-Vintage-Movie-Poster-Original.jpg?v=1738912645",
     };
 
     it("renders movie tile correctly", () => {
         render(<MovieTile movie={movie} />);
 
         expect(screen.getByText(movie.title)).toBeInTheDocument();
-        expect(screen.getByText(movie.releaseDate.substring(0, 4))).toBeInTheDocument();
+        expect(screen.getByText(movie.release_date.substring(0, 4))).toBeInTheDocument();
         expect(screen.getByText(movie.genres.join(", "))).toBeInTheDocument();
     });
 
@@ -29,7 +29,7 @@ describe("MovieTile Component", () => {
         render(<MovieTile movie={movie} />);
 
         const img = screen.getByAltText(movie.title);
-        expect(img).toHaveAttribute("src", movie.imageUrl);
+        expect(img).toHaveAttribute("src", movie.poster_path);
     });
 
     it("calls onClick when movie tile is clicked", () => {

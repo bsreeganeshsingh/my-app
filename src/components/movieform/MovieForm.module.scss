@@ -7,7 +7,7 @@
     padding: 20px;
     border-radius: 8px;
     width: 100%;
-    max-width: 470px;
+    max-width: 650px;
 
     .genreField {
         display: flex;
@@ -19,21 +19,22 @@
     label {
         display: flex;
         flex-direction: column;
-        font-weight: 600;
+        font-weight: 400;
         font-size: 0.95rem;
+        color: #f65261;
 
         input,
         textarea {
             margin-top: 8px;
             padding: 10px;
             font-size: 1rem;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 4px;
             background-color: #333;
             color: #fff;
 
             &:focus {
-                outline: 2px solid #f65261;
+                outline: none;
             }
         }
     }
@@ -122,12 +123,38 @@
         font-size: 0.95rem;
         cursor: pointer;
         vertical-align: middle;
+        color: #fff;
+
+        input[type='checkbox'] {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #fff;
+            border: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
 
         input[type='checkbox'] {
             margin: 0;
             flex-shrink: 0;
             width: 16px;
             height: 16px;
+        }
+
+        input[type='checkbox']:checked::after {
+            content: '✔';
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            left: 2px;
+            top: -1px;
+        }
+
+        input[type='checkbox']:checked {
+            background-color: #f65261;
         }
 
         span {
