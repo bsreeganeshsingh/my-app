@@ -8,6 +8,13 @@ jest.mock('react-dom/client', () => ({
         render: jest.fn(),
     })),
 }));
+
+jest.mock('react-router-dom', () => ({
+    BrowserRouter: ({ children }) => <div>{children}</div>,
+    createBrowserRouter: jest.fn(() => ({})),
+    RouterProvider: ({ router }) => <div data-testid="router-provider">{JSON.stringify(router)}</div>,
+}));
+
 jest.mock('./reportWebVitals', () => jest.fn());
 
 describe('index.js', () => {

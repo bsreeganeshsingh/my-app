@@ -4,25 +4,32 @@ import { useAddMovie } from '../../hooks/useaddmovie/useAddMovie';
 import { useDeleteMovie } from '../../hooks/usedeletemovie/useDeleteMovie'
 import { useEditMovie } from '../../hooks/useeditmovie/useEditMovie';
 import { useMovies } from '../../hooks/usemovies/useMovies';
+import { useNavigate, useParams, useSearchParams, Outlet } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import Dialog from '../dialog/Dialog';
 import GenreSelect from '../genreselect/GenreSelect';
-import MovieDetails from '../moviedetails/MovieDetails';
 import MovieForm from '../movieform/MovieForm';
 import MovieTile from '../movietile/MovieTile';
-import SearchForm from '../searchform/SearchForm';
 import SortControl from '../sortcontrol/SortControl';
 import styles from './MovieListPage.module.scss';
 
 function MovieListPage() {
-    const [sortBy, setSortBy] = useState('title');
-    const [selectedMovie, setSelectedMovie] = useState(null);
-    const [selectedGenre, setSelectedGenre] = useState('ALL');
-    const [searchQuery, setSearchQuery] = useState('A');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editMovie, setEditMovie] = useState(null);
-    const [wasEdit, setWasEdit] = useState(false);
+    const [isEditSuccess, setIsEditSuccess] = useState(false);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
     const [movieToDelete, setMovieToDelete] = useState(null);
+
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { movieId } = useParams();
+
+    const searchQuery = searchParams.get('query') ?? 'A';
+    const selectedGenre = searchParams.get('genre') ?? 'ALL';
+    const sortBy = searchParams.get('sortBy') ?? 'title';
+    const sortOrder = searchParams.get('sortOrder') ?? 'asc';
+
 
     // add movie hook
     const addMovieMutation = useAddMovie();
@@ -38,15 +45,24 @@ function MovieListPage() {
         search: searchQuery,
         genre: selectedGenre === 'ALL' ? '' : selectedGenre,
         sortBy: sortBy,
+        sortOrder: sortOrder,
     });
     const movieList = data?.movies || [];
 
     const handleSearch = (query) => {
-        setSearchQuery(query);
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('query', query);
+            return newParams;
+        });
     }
 
     const handleSortChange = (by) => {
-        setSortBy(by);
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set('sortBy', by);
+            return newParams;
+        });
     };
 
     const handleMovieSubmit = (movieData) => {
@@ -55,10 +71,13 @@ function MovieListPage() {
 
             editMovieMutation.mutate(updatedMovie, {
                 onSuccess: () => {
-                    if (selectedMovie && selectedMovie.id === editMovie.id) {
-                        setSelectedMovie(updatedMovie);
-                    }
-                    setWasEdit(true);
+                    // Update the movie in the query cache
+                    queryClient.invalidateQueries(['movie', updatedMovie.id]);
+
+                    // Invalidate movie list to refetch updated list
+                    queryClient.invalidateQueries({ queryKey: ['movies'] });
+
+                    setIsEditSuccess(true);
                     setDialogOpen(false);
                     setEditMovie(null);
                     setSuccessDialogOpen(true);
@@ -71,7 +90,10 @@ function MovieListPage() {
         } else {
             addMovieMutation.mutate(movieData, {
                 onSuccess: () => {
-                    setWasEdit(false);
+                    // Add the new movie to the query cache
+                    queryClient.invalidateQueries({ queryKey: ['movies'] });
+
+                    setIsEditSuccess(false);
                     setDialogOpen(false);
                     setEditMovie(null);
                     setSuccessDialogOpen(true);
@@ -86,13 +108,17 @@ function MovieListPage() {
 
     const handleDeleteMovie = () => {
 
-        if (!movieToDelete) return;
-
         deleteMovieMutation.mutate(movieToDelete.id, {
             onSuccess: () => {
-                if (selectedMovie && selectedMovie.id === movieToDelete.id) {
-                    setSelectedMovie(null);
-                }
+                // Remove the deleted movie from the query cache
+                queryClient.removeQueries(['movie', movieToDelete.id]);
+
+                // Invalidate movie list (to refetch updated list)
+                queryClient.invalidateQueries({ queryKey: ['movies'] });
+
+                // Navigate away if user is viewing this movie
+                navigate('/', { replace: true });
+
                 setMovieToDelete(null);
             },
             onError: (error) => {
@@ -101,40 +127,47 @@ function MovieListPage() {
         })
     };
 
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Movies not found</div>;
+
     return (
         <div className={styles.home}>
-            {!selectedMovie && (
-                <>
-                    <div className={styles.searchSection}>
-                        <div className={styles.header}>
-                            <div className={styles.logo}>netflix<span>roulette</span></div>
-                            <button
-                                onClick={() => setDialogOpen(true)}
-                                className={styles.addBtn}
-                                disabled={addMovieMutation.isLoading}
-                            >
-                                {addMovieMutation.isLoading ? 'Adding...' : '+ ADD MOVIE'}
-                            </button>
-                        </div>
-                        <SearchForm initialQuery="" onSearch={(query) => handleSearch(query)} />
+            {!movieId && (
+                <div className={styles.searchSection}>
+                    <div className={styles.header}>
+                        <div className={styles.logo}>netflix<span>roulette</span></div>
+                        <button
+                            onClick={() => setDialogOpen(true)}
+                            className={styles.addBtn}
+                            disabled={addMovieMutation.isLoading}
+                        >
+                            {addMovieMutation.isLoading ? 'Adding...' : '+ ADD MOVIE'}
+                        </button>
                     </div>
-                    <div className={styles.controlsRow}>
-                        <GenreSelect
-                            genres={genres}
-                            selectedGenre={selectedGenre}
-                            onSelect={setSelectedGenre}
-                        />
-                        <SortControl sortOptions={sortOptions} selected={sortBy} onSortChange={handleSortChange} />
-                    </div>
-                </>
+                    <Outlet context={{ handleSearch }} />
+                </div>
             )}
-            {selectedMovie && (<MovieDetails movie={selectedMovie} onClose={() => setSelectedMovie(null)} />)}
+            {movieId && (<Outlet />)}
+            <div className={styles.controlsRow}>
+                <GenreSelect
+                    genres={genres}
+                    selectedGenre={selectedGenre}
+                    onSelect={(genre) => {
+                        setSearchParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.set('genre', genre);
+                            return newParams;
+                        });
+                    }}
+                />
+                <SortControl sortOptions={sortOptions} selected={sortBy} onSortChange={handleSortChange} />
+            </div>
             <div className={styles.movieGrid}>
                 {Array.isArray(movieList) && movieList.length > 0 ? (
                     movieList.map(movie => (
                         <MovieTile key={movie.id}
                             movie={movie}
-                            onClick={() => setSelectedMovie(movie)}
+                            onClick={() => navigate(`/${movie.id}?${searchParams.toString()}`)}
                             onEdit={(movie) => {
                                 setEditMovie(movie);
                                 setDialogOpen(true);
@@ -160,7 +193,7 @@ function MovieListPage() {
                 </Dialog>
             )}
             {movieToDelete && (
-                <Dialog onClose={() => setMovieToDelete(false)}>
+                <Dialog onClose={() => setMovieToDelete(null)}>
                     <div className={styles.deleteDialog}>
                         <div><h2>DELETE MOVIE</h2></div>
                         <div>Are you sure you want to delete '{movieToDelete.title}' movie?</div>
@@ -173,7 +206,7 @@ function MovieListPage() {
                     <div className={styles.successMessage}>
                         <div className={styles.tickMark}>✓</div>
                         <h2>Congratulations!</h2>
-                        <p>The movie has been {wasEdit ? 'updated' : 'added'} to database successfully.</p>
+                        <p>The movie has been {isEditSuccess ? 'updated' : 'added'} to database successfully.</p>
                     </div>
                 </Dialog>
             )}

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../../utils/api';
 
 const fetchMovies = async ({ queryKey }) => {
-    const [_key, { search, genre, sortBy }] = queryKey;
+    const [, { search, genre, sortBy, sortOrder }] = queryKey;
 
     const params = {};
     if (search) {
@@ -12,12 +12,13 @@ const fetchMovies = async ({ queryKey }) => {
     if (genre) params.filter = genre;
     if (sortBy) {
         params.sortBy = sortBy;
-        params.sortOrder = 'asc';
     }
+    if (sortOrder) {
+        params.sortOrder = sortOrder;
+    }
+
     params.offset = 0;
     params.limit = 20;
-
-    console.log("params: " + params.data);
 
     const { data } = await api.get('/movies', { params });
 
@@ -29,9 +30,9 @@ const fetchMovies = async ({ queryKey }) => {
     };
 };
 
-export const useMovies = ({ search = '', genre = '', sortBy = '' }) => {
+export const useMovies = ({ search = '', genre = '', sortBy = '', sortOrder = '' }) => {
     return useQuery({
-        queryKey: ['movies', { search, genre, sortBy }],
+        queryKey: ['movies', { search, genre, sortBy, sortOrder }],
         queryFn: fetchMovies,
     });
 };
