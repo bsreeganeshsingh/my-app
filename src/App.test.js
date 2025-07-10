@@ -34,6 +34,18 @@ jest.mock('./hooks/usemovies/useMovies', () => ({
   }),
 }));
 
+beforeAll(() => {
+  jest.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+    if (
+      typeof message === 'string' &&
+      message.includes('React Router Future Flag Warning')
+    ) {
+      return; // Suppress this specific warning
+    }
+    console.warn(message, ...args); // Let all other warnings pass through
+  });
+});
+
 const queryClient = new QueryClient();
 
 test('renders input with placeholder text', async () => {
@@ -44,4 +56,8 @@ test('renders input with placeholder text', async () => {
   );
   const inputElement = await screen.findByPlaceholderText('What do you want to watch?');
   expect(inputElement).toBeInTheDocument();
+});
+
+afterAll(() => {
+  console.warn.mockRestore();
 });

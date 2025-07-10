@@ -71,15 +71,28 @@
     "webpack": "^5.99.9"
   },
   "jest": {
+    "collectCoverage": true,
+    "testEnvironment": "jsdom",
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.test.{js,jsx,ts,tsx}",
+      "src/**/*.{js,jsx}",
+      "!src/**/*.test.{js,jsx}",
       "!src/reportWebVitals.js",
       "!src/setupTests.js"
     ],
+    "coverageDirectory": "coverage",
     "moduleNameMapper": {
       "\\.css$": "<rootDir>/styleMock.js",
-      "\\.scss$": "<rootDir>/styleMock.js"
-    }
+      "\\.scss$": "identity-obj-proxy"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "\\.stories\\.jsx?$",
+      "/src/stories/",
+      "/src/utils/"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   }
 }

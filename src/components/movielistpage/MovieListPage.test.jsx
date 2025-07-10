@@ -152,6 +152,18 @@ jest.mock('../../hooks/usedeletemovie/useDeleteMovie', () => ({
     })
 }));
 
+beforeAll(() => {
+    jest.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+        if (
+            typeof message === 'string' &&
+            message.includes('React Router Future Flag Warning')
+        ) {
+            return; // Suppress this specific warning
+        }
+        console.warn(message, ...args); // Let all other warnings pass through
+    });
+});
+
 describe("MovieListPage Component", () => {
     function renderMovieListPageWithPath(path = '/') {
         const queryClient = new QueryClient();
@@ -588,4 +600,8 @@ describe("MovieListPage Component", () => {
             expect(currentLocation).toContain(`${key}=${value}`);
         }
     }
+
+    afterAll(() => {
+        console.warn.mockRestore();
+    });
 });
