@@ -155,6 +155,10 @@ jest.mock('../../hooks/usedeletemovie/useDeleteMovie', () => ({
 describe("MovieListPage Component", () => {
     function renderMovieListPageWithPath(path = '/') {
         const queryClient = new QueryClient();
+        const LocationDisplay = () => {
+            const location = require('react-router-dom').useLocation();
+            return <div data-testid="current-location">{location.pathname + location.search}</div>;
+        };
         return render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={[path]}>
@@ -166,6 +170,7 @@ describe("MovieListPage Component", () => {
                             <Route index element={<div data-testid="movie-details-wrapper"><button onClick={() => mockNavigate('/')}>Close</button></div>} />
                         </Route>
                     </Routes>
+                    <LocationDisplay />
                 </MemoryRouter>
             </QueryClientProvider >
         );
@@ -176,6 +181,7 @@ describe("MovieListPage Component", () => {
         expect(screen.getByTestId("search-form")).toBeInTheDocument();
         expect(screen.getByTestId("genre-select")).toBeInTheDocument();
         expect(screen.getByTestId("sort-control")).toBeInTheDocument();
+        expect(window.location.href).toBe('http://localhost/');
     });
 
     it("shows movie grid always", () => {
@@ -185,6 +191,7 @@ describe("MovieListPage Component", () => {
         fireEvent.click(screen.getAllByTestId("movie-tile")[0]);
         // Movie grid should still be present
         expect(screen.getAllByTestId("movie-tile").length).toBeGreaterThan(0);
+        expect(window.location.href).toBe('http://localhost/');
     });
 
     it("renders GenreSelect with correct options and default", () => {
@@ -194,6 +201,7 @@ describe("MovieListPage Component", () => {
         mockGenres.forEach(genre => {
             expect(screen.getByText(genre)).toBeInTheDocument();
         });
+        expect(window.location.href).toBe('http://localhost/');
     });
 
     it("renders SortControl with correct default", () => {
@@ -529,4 +537,55 @@ describe("MovieListPage Component", () => {
         expect(screen.getByText("Movies not found")).toBeInTheDocument();
         mockIsError = false; // Reset for other tests
     });
+
+    it("navigates to movie detail page when a movie tile is clicked", () => {
+        renderMovieListPageWithPath('/?query=Spider&genre=ALL&sortBy=title');
+
+        const firstMovieTile = screen.getAllByTestId("movie-tile")[0];
+        fireEvent.click(firstMovieTile);
+
+        expect(mockNavigate).toHaveBeenCalledWith('/1?query=Spider&genre=ALL&sortBy=title');
+    });
+
+    it("updates URL when search query is changed", () => {
+        renderMovieListPageWithPath();
+        fireEvent.change(screen.getByTestId("search-form"), { target: { value: "Avengers" } });
+
+        expectURLToContain({ query: "Avengers" });
+    });
+
+    it("updates URL when genre is changed", () => {
+        renderMovieListPageWithPath();
+        fireEvent.change(screen.getByTestId("genre-select"), { target: { value: "ACTION" } });
+
+        expectURLToContain({ genre: "ACTION" });
+    });
+
+    it("updates URL when sortBy is changed", () => {
+        renderMovieListPageWithPath();
+        fireEvent.change(screen.getByTestId("sort-control"), { target: { value: "release_date" } });
+
+        expectURLToContain({ sortBy: "release_date" });
+    });
+
+    it("updates URL when search, genre, and sort are changed", () => {
+        renderMovieListPageWithPath();
+
+        fireEvent.change(screen.getByTestId("search-form"), { target: { value: "Batman" } });
+        fireEvent.change(screen.getByTestId("genre-select"), { target: { value: "COMEDY" } });
+        fireEvent.change(screen.getByTestId("sort-control"), { target: { value: "title" } });
+
+        expectURLToContain({
+            query: "Batman",
+            genre: "COMEDY",
+            sortBy: "title"
+        });
+    });
+
+    function expectURLToContain(expectedParams) {
+        const currentLocation = screen.getByTestId("current-location").textContent;
+        for (const [key, value] of Object.entries(expectedParams)) {
+            expect(currentLocation).toContain(`${key}=${value}`);
+        }
+    }
 });
