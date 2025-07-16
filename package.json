@@ -9,6 +9,8 @@
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "focus-trap-react": "^11.0.4",
+    "formik": "^2.4.6",
+    "lint": "^0.8.19",
     "lucide-react": "^0.523.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
