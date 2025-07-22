@@ -1,11 +1,17 @@
-import React from 'react';
-import SearchForm from './SearchForm';
-import { useOutletContext } from 'react-router-dom';
+import React from "react";
+import SearchForm from "./SearchForm";
+import { Outlet, useOutletContext } from "react-router-dom";
 
 function SearchSection() {
-    const { handleSearch } = useOutletContext();
+  const outletContext = useOutletContext() || {};
+  const { handleSearch = () => {} } = outletContext;
 
-    return <SearchForm initialQuery="" onSearch={handleSearch} />;
+  return (
+    <>
+      <SearchForm initialQuery="" onSearch={handleSearch} />
+      <Outlet />
+    </>
+  );
 }
 
 export default SearchSection;

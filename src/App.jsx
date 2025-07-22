@@ -1,31 +1,45 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import MovieDetailsWrapper from './components/moviedetails/MovieDetailsWrapper';
-import MovieListPage from './components/movielistpage/MovieListPage';
-import SearchSection from './components/searchform/SearchSection';
-import './App.css';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AddMovieForm from "./components/movieform/AddMovieForm";
+import EditMovieForm from "./components/movieform/EditMovieForm";
+import MovieDetailsWrapper from "./components/moviedetails/MovieDetailsWrapper";
+import MovieListPage from "./components/movielistpage/MovieListPage";
+import SearchSection from "./components/searchform/SearchSection";
+import "./App.css";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MovieListPage />,
     children: [
       {
-        index: true,
-        element: <SearchSection />
+        path: "",
+        element: <SearchSection />,
+        children: [
+          {
+            path: "new",
+            element: <AddMovieForm />,
+          },
+          {
+            path: ":movieId/edit",
+            element: <EditMovieForm />,
+          },
+        ],
       },
       {
-        path: ':movieId',
+        path: ":movieId",
         element: <MovieDetailsWrapper />,
-        errorElement: <div>Something went wrong while loading movie details.</div>
-      }
-    ]
+        errorElement: (
+          <div>Something went wrong while loading movie details.</div>
+        ),
+      },
+    ],
   },
   {
     future: {
-      v7_startTransition: true
+      v7_startTransition: true,
     },
-  }
+  },
 ]);
 
 function App() {

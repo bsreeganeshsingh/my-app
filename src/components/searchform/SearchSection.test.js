@@ -4,68 +4,72 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import SearchSection from './SearchSection';
 import { useOutletContext } from 'react-router-dom';
 
+// Mock useOutletContext from react-router-dom
 jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useOutletContext: jest.fn(),
+  ...jest.requireActual('react-router-dom'),
+  useOutletContext: jest.fn(),
+  Outlet: () => <div data-testid="outlet" />,
 }));
 
+// Track props passed to the mocked SearchForm
 const mockSearchForm = jest.fn();
+
+// Mock SearchForm component
 jest.mock('./SearchForm', () => (props) => {
-    mockSearchForm(props);
-    const { onSearch } = props;
-    return (
-        <div data-testid="search-form">
-            Mocked SearchForm
-            <button data-testid="search-btn" onClick={() => onSearch('Test Query')}>
-                Trigger Search
-            </button>
-        </div>
-    );
+  mockSearchForm(props);
+  const { onSearch } = props;
+  return (
+    <div data-testid="search-form">
+      Mocked SearchForm
+      <button data-testid="search-btn" onClick={() => onSearch('Test Query')}>
+        Trigger Search
+      </button>
+    </div>
+  );
 });
 
 describe('SearchSection', () => {
-    const mockHandleSearch = jest.fn();
+  const mockHandleSearch = jest.fn();
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        useOutletContext.mockReturnValue({ handleSearch: mockHandleSearch });
-    });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    useOutletContext.mockReturnValue({ handleSearch: mockHandleSearch });
+  });
 
-    test('renders SearchForm component', () => {
-        render(<SearchSection />);
-        const form = screen.getByTestId('search-form');
-        expect(form).toBeInTheDocument();
-    });
+  test('renders SearchForm component', () => {
+    render(<SearchSection />);
+    const form = screen.getByTestId('search-form');
+    expect(form).toBeInTheDocument();
+  });
 
-    test('passes correct props to SearchForm', () => {
-        render(<SearchSection />);
-        expect(mockSearchForm).toHaveBeenCalledWith(
-            expect.objectContaining({
-                initialQuery: '',
-                onSearch: mockHandleSearch,
-            }),
-        );
-    });
+  test('passes correct props to SearchForm', () => {
+    render(<SearchSection />);
+    expect(mockSearchForm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        initialQuery: '',
+        onSearch: mockHandleSearch,
+      }),
+    );
+  });
 
-    test('calls handleSearch when onSearch is triggered', () => {
-        // Redefine the mock
-        jest.resetModules();
-        const mockHandleSearch = jest.fn();
-        jest.doMock('react-router-dom', () => ({
-            ...jest.requireActual('react-router-dom'),
-            useOutletContext: () => ({ handleSearch: mockHandleSearch }),
-        }));
+  test('calls handleSearch when onSearch is triggered', () => {
+    render(<SearchSection />);
+    const btn = screen.getByTestId('search-btn');
+    fireEvent.click(btn);
+    expect(mockHandleSearch).toHaveBeenCalledWith('Test Query');
+  });
 
-        const TestSearchForm = ({ onSearch }) => (
-            <button onClick={() => onSearch('Test Query')} data-testid="search-btn">Search</button>
-        );
-        jest.doMock('./SearchForm', () => TestSearchForm);
+  test('renders Outlet as well', () => {
+    render(<SearchSection />);
+    const outlet = screen.getByTestId('outlet');
+    expect(outlet).toBeInTheDocument();
+  });
 
-        const { default: SearchSection } = require('./SearchSection');
-
-        render(<SearchSection />);
-        fireEvent.click(screen.getByTestId('search-btn'));
-
-        expect(mockHandleSearch).toHaveBeenCalledWith('Test Query');
-    });
+  test('uses default handleSearch when useOutletContext is undefined', () => {
+  useOutletContext.mockReturnValue(undefined);
+  render(<SearchSection />);
+  
+  const btn = screen.getByTestId('search-btn');
+  expect(() => fireEvent.click(btn)).not.toThrow(); // should be safe
+});
 });
