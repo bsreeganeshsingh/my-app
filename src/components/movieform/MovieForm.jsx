@@ -1,166 +1,217 @@
-import { genres as genreOptions } from '../../utils/Constants';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import styles from './MovieForm.module.scss';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { genres as genreOptions } from "../../utils/Constants";
+import styles from "./MovieForm.module.scss";
+
+const validationSchema = Yup.object().shape({
+  title: Yup.string().required("Title is required"),
+  tagline: Yup.string().required("Tagline is required"),
+  release_date: Yup.string().required("Release date is required"),
+  runtime: Yup.number()
+    .typeError("Must be a number")
+    .required("Runtime is required"),
+  vote_average: Yup.number()
+    .typeError("Must be a number")
+    .required("Rating is required"),
+  budget: Yup.number()
+    .typeError("Must be a number")
+    .required("Budget is required"),
+  overview: Yup.string().required("Description is required"),
+  poster_path: Yup.string()
+    .url("Must be a valid URL")
+    .required("Image URL is required"),
+  genres: Yup.array().min(1, "Select at least one genre"),
+});
 
 const MovieForm = ({ initialData = {}, onSubmit, onReset }) => {
-    const genresAsArray = Array.isArray(initialData?.genres)
-        ? initialData.genres
-        : (initialData?.genres || '')
-            .split(', ')
-            .map((g) => g.trim())
-            .filter(Boolean);
+  const genresAsArray = Array.isArray(initialData?.genres)
+    ? initialData.genres
+    : (initialData?.genres || "")
+        .split(", ")
+        .map((g) => g.trim())
+        .filter(Boolean);
 
-    const [form, setForm] = useState({
-        title: '',
-        tagline: '',
-        release_date: '',
-        runtime: '',
-        vote_average: '',
-        budget: '',
-        overview: '',
-        poster_path: '',
-        ...initialData,
-        genres: genresAsArray,
-    });
+  const [isGenreDropdownOpen, setGenreDropdownOpen] = useState(false);
 
-    const [isGenreDropdownOpen, setGenreDropdownOpen] = useState(false);
+  const initialValues = {
+    title: "",
+    tagline: "",
+    release_date: "",
+    runtime: "",
+    vote_average: "",
+    budget: "",
+    overview: "",
+    poster_path: "",
+    genres: genresAsArray,
+    ...initialData,
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    };
+  const toggleGenre = (genre, values, setFieldValue) => {
+    const genres = values.genres.includes(genre)
+      ? values.genres.filter((g) => g !== genre)
+      : [...values.genres, genre];
 
-    const handleGenreChange = (genre) => {
-        setForm((prev) => {
-            const hasGenre = prev.genres.includes(genre);
-            const genres = hasGenre
-                ? prev.genres.filter((g) => g !== genre)
-                : [...prev.genres, genre];
-            return { ...prev, genres };
-        });
-    };
+    setFieldValue("genres", genres);
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values, { resetForm }) => {
         const prepared = {
-            ...form,
-            vote_average: parseFloat(form.vote_average),
-            runtime: parseInt(form.runtime, 10),
-            budget: parseInt(form.budget, 10),
-            genres: form.genres,
+          ...values,
+          vote_average: parseFloat(values.vote_average),
+          runtime: parseInt(values.runtime, 10),
+          budget: parseInt(values.budget, 10),
         };
         onSubmit(prepared);
-    };
+        resetForm();
+      }}
+      onReset={() => {
+        if (onReset) onReset();
+      }}
+    >
+      {({ values, setFieldValue }) => (
+        <Form className={styles.form}>
+          <label>
+            TITLE
+            <Field name="title" />
+            <ErrorMessage
+              name="title"
+              component="div"
+              className={styles.error}
+            />
+          </label>
 
-    const handleReset = () => {
-        setForm({
-            title: '',
-            tagline: '',
-            release_date: '',
-            runtime: '',
-            vote_average: '',
-            budget: '',
-            overview: '',
-            poster_path: '',
-            ...initialData,
-            genres: genresAsArray,
-        });
+          <label>
+            RELEASE DATE
+            <Field name="release_date" type="date" />
+            <ErrorMessage
+              name="release_date"
+              component="div"
+              className={styles.error}
+            />
+          </label>
 
-        if (onReset) {
-            onReset();
-        }
-    };
+          <label>
+            TAGLINE
+            <Field name="tagline" />
+            <ErrorMessage
+              name="tagline"
+              component="div"
+              className={styles.error}
+            />
+          </label>
 
-    return (
-        <form className={styles.form} onSubmit={handleSubmit} onReset={handleReset}>
-            <label>
-                TITLE
-                <input name="title" value={form.title} onChange={handleChange} required />
-            </label>
-            <label>
-                RELEASE DATE
-                <input
-                    name="release_date"
-                    type="date"
-                    value={form.release_date}
-                    onChange={handleChange}
-                    required
-                />
-            </label>
-            <label>
-                TAGLINE
-                <input name="tagline" value={form.tagline} onChange={handleChange} required />
-            </label>
-            <label>
-                RATING
-                <input name="vote_average" type="number" step="0.1" value={form.vote_average} onChange={handleChange} required />
-            </label>
-            <label>
-                IMAGE URL
-                <input name="poster_path" value={form.poster_path} onChange={handleChange} required />
-            </label>
-            <label>
-                DURATION
-                <input name="runtime" type="number" value={form.runtime} onChange={handleChange} required />
-            </label>
-            <div className={styles.genreField}>
-                <label>GENRES</label>
-                <div className={styles.dropdownContainer}>
-                    <div
-                        className={styles.dropdownHeader}
-                        data-testid="genre-dropdown-header"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setGenreDropdownOpen(prev => !prev);
-                        }}
-                    >
-                        {form.genres.length > 0 ? form.genres.join(', ') : 'Select Genre'}
-                    </div>
-                    {isGenreDropdownOpen && (
-                        <div className={styles.dropdownList}>
-                            {genreOptions.filter((genre) => genre !== 'ALL').map((genre) => (
-                                <label key={genre} className={styles.dropdownItem}>
-                                    <input
-                                        type="checkbox"
-                                        aria-label={`genre-${genre}`}
-                                        checked={form.genres.some(g => g.toLowerCase() === genre.toLowerCase())}
-                                        onChange={(e) => {
-                                            e.stopPropagation();
-                                            handleGenreChange(genre);
-                                        }}
-                                    />
-                                    <span>{genre}</span>
-                                </label>
-                            ))}
-                        </div>
-                    )}
+          <label>
+            RATING
+            <Field name="vote_average" type="number" step="0.1" />
+            <ErrorMessage
+              name="vote_average"
+              component="div"
+              className={styles.error}
+            />
+          </label>
+
+          <label>
+            IMAGE URL
+            <Field name="poster_path" />
+            <ErrorMessage
+              name="poster_path"
+              component="div"
+              className={styles.error}
+            />
+          </label>
+
+          <label>
+            DURATION
+            <Field name="runtime" type="number" />
+            <ErrorMessage
+              name="runtime"
+              component="div"
+              className={styles.error}
+            />
+          </label>
+
+          <div className={styles.genreField}>
+            <label>GENRES</label>
+            <div className={styles.dropdownContainer}>
+              <div
+                className={styles.dropdownHeader}
+                data-testid="genre-dropdown-header"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setGenreDropdownOpen((prev) => !prev);
+                }}
+              >
+                {values.genres.length > 0
+                  ? values.genres.join(", ")
+                  : "Select Genre"}
+              </div>
+              {isGenreDropdownOpen && (
+                <div className={styles.dropdownList}>
+                  {genreOptions
+                    .filter((g) => g !== "ALL")
+                    .map((genre) => (
+                      <label key={genre} className={styles.dropdownItem}>
+                        <input
+                          type="checkbox"
+                          data-testid={`genre-${genre}`}
+                          checked={values.genres.includes(genre)}
+                          onChange={() =>
+                            toggleGenre(genre, values, setFieldValue)
+                          }
+                        />
+                        <span>{genre}</span>
+                      </label>
+                    ))}
                 </div>
+              )}
+              <ErrorMessage
+                name="genres"
+                component="div"
+                className={styles.error}
+              />
             </div>
-            <label>
-                BUDGET
-                <input name="budget" type="number" value={form.budget} onChange={handleChange} required />
-            </label>
-            <label>
-                DESCRIPTION
-                <textarea name="overview" value={form.overview} onChange={handleChange} required />
-            </label>
-            <div className={styles.buttonGroup}>
-                <button type="reset">RESET</button>
-                <button type="submit">SUBMIT</button>
-            </div>
-        </form>
-    );
+          </div>
+
+          <label>
+            BUDGET
+            <Field name="budget" type="number" />
+            <ErrorMessage
+              name="budget"
+              component="div"
+              className={styles.error}
+            />
+          </label>
+
+          <label>
+            DESCRIPTION
+            <Field name="overview" as="textarea" />
+            <ErrorMessage
+              name="overview"
+              component="div"
+              className={styles.error}
+            />
+          </label>
+
+          <div className={styles.buttonGroup}>
+            <button type="reset">RESET</button>
+            <button type="submit">SUBMIT</button>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
 };
 
 MovieForm.propTypes = {
-    initialData: PropTypes.object,
-    onSubmit: PropTypes.func.isRequired,
-    onReset: PropTypes.func,
-};
-
-MovieForm.defaultProps = {
-    initialData: {},
+  initialData: PropTypes.object,
+  onSubmit: PropTypes.func.isRequired,
+  onReset: PropTypes.func,
 };
 
 export default MovieForm;

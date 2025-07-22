@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import styles from './SearchForm.module.scss';
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import styles from "./SearchForm.module.scss";
 
-function SearchForm({ initialQuery = '', onSearch }) {
+function SearchForm({ initialQuery = "", onSearch }) {
   const [query, setQuery] = useState(initialQuery);
 
   const handleInputChange = (e) => {
@@ -15,7 +16,7 @@ function SearchForm({ initialQuery = '', onSearch }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       triggerSearch();
     }
   };
@@ -40,6 +41,8 @@ function SearchForm({ initialQuery = '', onSearch }) {
           SEARCH
         </button>
       </div>
+
+      <Outlet />
     </div>
   );
 }
